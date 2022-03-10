@@ -1,3 +1,13 @@
+# Features used
+Material ui
+Yup
+React-router-dom v6
+Iconify/React
+React-helmet-async
+Simplebar-React
+Formik
+Date-Fns
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
