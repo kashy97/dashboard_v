@@ -96,7 +96,7 @@ export default function Router() {
       path: "/",
       element: <LogoOnlyLayout />,
       children: [
-        { path: "/", element: <Navigate to="/dashboard/app" /> },
+        { path: "/", element: <Navigate to="/dashboard/homepage" /> },
         { path: "/login", element: <Login /> },
         { path: "/register", element: <Register /> },
         { path: "/forgot_password", element: <ForgotPassword/>},
