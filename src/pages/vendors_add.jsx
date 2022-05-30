@@ -1,4 +1,3 @@
-import { LineAxisOutlined } from "@mui/icons-material";
 import Axios from 'axios';
 import {
   Box,
