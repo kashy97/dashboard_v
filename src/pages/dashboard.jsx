@@ -18,7 +18,7 @@ const DashBoard = (props) => {
   const [releaseData, setReleaseData] = React.useState([]);
   const r_columns = [
     { field: "id", headerName: "#", flex: 1 },
-    { field: "vendor", headerName: "Vendor", flex: 1 },
+    { field: "vendor.name", headerName: "Vendor", flex: 1 },
     { field: "amount", headerName: "Amount", flex: 1 },
     { field: "edition", headerName: "Edition", flex: 1 },
     { field: "view", headerName: "View", flex: 1 },
@@ -33,24 +33,24 @@ const DashBoard = (props) => {
   const v_columns = [{ field: "name", headerName: "Vendor Name", flex: 1 }];
 
   useEffect(() => {
-    console.log("fetched");
-    fetch("")
+    fetch("https://poorvikadashboard.herokuapp.com/api/v1/po")
       .then((data) => data.json())
       .then((data) => setTableData(data));
+      console.log("fetched");
   }, [props.value]);
 
   useEffect(() => {
-    console.log("fetched");
-    fetch("")
+    fetch("https://poorvikadashboard.herokuapp.com/api/v1/vendor")
       .then((data) => data.json())
       .then((data) => setVendorData(data));
+      console.log("fetched");
   }, [props.value]);
 
   useEffect(() => {
-    console.log("fetched");
-    fetch("")
+    fetch("https://poorvikadashboard.herokuapp.com/api/v1/ro")
       .then((data) => data.json())
       .then((data) => setReleaseData(data));
+      console.log("fetched");
   }, [props.value]);
 
   return (

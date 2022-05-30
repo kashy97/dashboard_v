@@ -15,7 +15,7 @@ const Orders = (props) => {
 
   React.useEffect(() => {
     console.log("fetched");
-    fetch("")
+    fetch("https://poorvikadashboard.herokuapp.com/api/v1/po")
       .then((data) => data.json())
       .then((data) => setTableData(data));
   }, [props.value]);

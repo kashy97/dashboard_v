@@ -9,9 +9,12 @@ import {
   Container,
   Grid,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import React from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import PickersDay from "@mui/lab/PickersDay";
+import startOfDay from "date-fns/startOfDay";
 import DatePicker from "@mui/lab/DatePicker";
 import Page from "../components/Page";
 
@@ -43,14 +46,57 @@ const billing_address = [
     label: "Bangalore",
   },
 ];
+
+
+const CustomPickersDay = styled(PickersDay, {
+  shouldForwardProp: (prop) => prop !== "selected"
+})(({ theme, selected }) => ({
+  ...(selected && {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.white,
+    "&:hover, &:focus": {
+      backgroundColor: theme.palette.primary.dark
+    },
+    borderTopLeftRadius: "50%",
+    borderBottomLeftRadius: "50%",
+    borderTopRightRadius: "50%",
+    borderBottomRightRadius: "50%"
+  })
+}));
+
 const ROrders = () => {
-  const [ro_value, setRovalue] = React.useState(null);
+  const [ro_value, setRovalue] = React.useState([startOfDay(new Date())]);
   const [pub_value, setPubvalue] = React.useState(null);
   const [gross, setGross] = React.useState(0);
   const [gst, setGst] = React.useState(0);
   const [gsta, setGsta] = React.useState(0);
   const [net, setNet] = React.useState(0);
 
+  const findDate = (dates, date) => {
+    const dateTime = date.getTime();
+    return dates.find((item) => item.getTime() === dateTime);
+  };
+
+  const findIndexDate = (dates, date) => {
+    const dateTime = date.getTime();
+    return dates.findIndex((item) => item.getTime() === dateTime);
+  };
+
+  const renderPickerDay = (date, selectedDates, pickersDayProps) => {
+    if (!ro_value) {
+      return <PickersDay {...pickersDayProps} />;
+    }
+
+    const selected = findDate(ro_value, date);
+
+    return (
+      <CustomPickersDay
+        {...pickersDayProps}
+        disableMargin
+        selected={selected}
+      />
+    );
+  };
   const changeGross = (e) => {
     setGross(Number(e.target.value));
   };
@@ -69,6 +115,8 @@ const ROrders = () => {
   const handleChange = () => {
     console.log("working");
   };
+
+  console.log("Dates",ro_value)
   return (
     <Page title="Release Order">
       <Container maxWidth="xl">
@@ -94,10 +142,19 @@ const ROrders = () => {
                     label="Ro_Date"
                     value={ro_value}
                     onChange={(newValue) => {
-                      setRovalue(newValue);
+                      const array = ro_value;
+                      const date = startOfDay(newValue);
+                      const index = findIndexDate(array, date);
+                      if (index >= 0) {
+                        array.splice(index, 1);
+                      } else {
+                        array.push(date);
+                      }
+                      setRovalue(array);
                     }}
-                    renderInput={(params) => (
-                      <TextField {...params} fullWidth />
+                    renderDay={renderPickerDay}
+                    renderInput={(ro_value) => (
+                      <TextField {...ro_value} fullWidth />
                     )}
                   />
                 </Grid>
