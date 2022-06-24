@@ -9,14 +9,15 @@ import {
   Container,
   Grid,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
+// import { styled } from "@mui/material/styles";
 import React from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import PickersDay from "@mui/lab/PickersDay";
+// import PickersDay from "@mui/lab/PickersDay";
 import startOfDay from "date-fns/startOfDay";
 import DatePicker from "@mui/lab/DatePicker";
 import Page from "../components/Page";
+import Axios from "axios";
 
 const edition = [
   {
@@ -24,18 +25,12 @@ const edition = [
     label: "null",
   },
 ];
-const vendor_cat = [
-  {
-    value: "null",
-    label: "null",
-  },
-];
-const vendor_name = [
-  {
-    value: "null",
-    label: "null",
-  },
-];
+// const vendor_cat = [
+//   {
+//     value: "null",
+//     label: "null",
+//   },
+// ];
 const billing_address = [
   {
     value: "chennai",
@@ -48,75 +43,127 @@ const billing_address = [
 ];
 
 
-const CustomPickersDay = styled(PickersDay, {
-  shouldForwardProp: (prop) => prop !== "selected"
-})(({ theme, selected }) => ({
-  ...(selected && {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.common.white,
-    "&:hover, &:focus": {
-      backgroundColor: theme.palette.primary.dark
-    },
-    borderTopLeftRadius: "50%",
-    borderBottomLeftRadius: "50%",
-    borderTopRightRadius: "50%",
-    borderBottomRightRadius: "50%"
-  })
-}));
+// const CustomPickersDay = styled(PickersDay, {
+//   shouldForwardProp: (prop) => prop !== "selected"
+// })(({ theme, selected }) => ({
+//   ...(selected && {
+//     backgroundColor: theme.palette.primary.main,
+//     color: theme.palette.common.white,
+//     "&:hover, &:focus": {
+//       backgroundColor: theme.palette.primary.dark
+//     },
+//     borderTopLeftRadius: "50%",
+//     borderBottomLeftRadius: "50%",
+//     borderTopRightRadius: "50%",
+//     borderBottomRightRadius: "50%"
+//   })
+// }));
 
 const ROrders = () => {
-  const [ro_value, setRovalue] = React.useState([startOfDay(new Date())]);
-  const [pub_value, setPubvalue] = React.useState(null);
+  const [ro_value, setRovalue] = React.useState(null);
+  const [pub_value, setPubvalue] = React.useState([startOfDay(new Date())]);
   const [gross, setGross] = React.useState(0);
   const [gst, setGst] = React.useState(0);
   const [gsta, setGsta] = React.useState(0);
   const [net, setNet] = React.useState(0);
+  const [addtype,setAddtype] = React.useState('');
+  const [size,setSize] = React.useState('');
+  const [color,setColor] = React.useState('');
+  const [vendors, setVendors] =React.useState([]);
+  const [idofvendor,setIdofvendor] = React.useState(0);
+  // const [billing,setBilling] =React.useState(0);  
 
-  const findDate = (dates, date) => {
-    const dateTime = date.getTime();
-    return dates.find((item) => item.getTime() === dateTime);
-  };
+  React.useEffect(()=>{
+    Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/vendor',{
+    }).then((response) => {
+          console.log("vendor",response.data);
+          const vendors=response.data;
+          // console.log("vendor",vendors[0].name);
+          setVendors(vendors);
+        }, (error) => {
+          console.log(error);
+      });
+    },[])
 
-  const findIndexDate = (dates, date) => {
-    const dateTime = date.getTime();
-    return dates.findIndex((item) => item.getTime() === dateTime);
-  };
+  React.useEffect(()=>{
+    vendors.map((v)=>(
+      setIdofvendor(v.id)
+    ))
+  },[vendors])
 
-  const renderPickerDay = (date, selectedDates, pickersDayProps) => {
-    if (!ro_value) {
-      return <PickersDay {...pickersDayProps} />;
-    }
+  const handleSubmit=(e) =>{
+    e.preventDefault();
+    Axios.post('https://poorvikadashboard.herokuapp.com/api/v1/ro',{
+        // id: id,
+        ro_date: ro_value,
+        Add_type: addtype,
+        Size: size,
+        vendor: idofvendor,
+        color: color,
+        gross_amount: gross,
+        gst: gst,
+        gst_amount: gsta,
+        net_amunt: net,
+        billing_address: billing_address,
+        edition: [
+            {
+                edition: edition,
+            }
+        ],
+        pub_date: [
+            {
+                pub_date: pub_value,
+            },
+        ],
+    }).then((response) => {
+      console.log(response);
+    },(error) => {
+      console.log(error);
+    });
+  }
 
-    const selected = findDate(ro_value, date);
+  // const findDate = (dates, date) => {
+  //   const dateTime = date.getTime();
+  //   return dates.find((item) => item.getTime() === dateTime);
+  // };
 
-    return (
-      <CustomPickersDay
-        {...pickersDayProps}
-        disableMargin
-        selected={selected}
-      />
-    );
-  };
-  const changeGross = (e) => {
-    setGross(Number(e.target.value));
-  };
+  // const findIndexDate = (dates, date) => {
+  //   const dateTime = date.getTime();
+  //   return dates.findIndex((item) => item.getTime() === dateTime);
+  // };
 
-  const changeGst = (e) => {
-    setGst(Number(e.target.value));
-  };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // const renderPickerDay = (date, selectedDates, pickersDayProps) => {
+  //   if (!ro_value) {
+  //     return <PickersDay {...pickersDayProps} />;
+  //   }
+
+  //   const selected = findDate(ro_value, date);
+
+  //   return (
+  //     <CustomPickersDay
+  //       {...pickersDayProps}
+  //       disableMargin
+  //       selected={selected}
+  //     />
+  //   );
+  // };
   React.useEffect(() => {
     // code to run when state changes
     const percent = gst / 100;
     setGsta(gross * percent);
-    setNet(gsta + gross);
-  });
+    setNet(Number(gsta + gross));
+  }, [gst,gross,gsta]);
 
-  const handleChange = () => {
-    console.log("working");
-  };
+  const gstClick = () => {
+    if(gst===0)
+      setGst('')
+  }
 
-  console.log("Dates",ro_value)
+  const grossClick = () => {
+    if(gross===0)
+      setGross('')
+  }
+  // console.log("Dates",ro_value)
   return (
     <Page title="Release Order">
       <Container maxWidth="xl">
@@ -126,7 +173,7 @@ const ROrders = () => {
               Release Order Entry form
             </Typography>
             <Grid container spacing={3} sx={{ pr: 5 }}>
-              <Grid item xs={12} md={6} xl={6}>
+              {/* <Grid item xs={12} md={6} xl={6}>
                 <TextField
                   fullWidth
                   id="ro_number"
@@ -134,7 +181,7 @@ const ROrders = () => {
                   type="number"
                   variant="outlined"
                 />
-              </Grid>
+              </Grid> */}
 
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <Grid item xs={12} md={6} xl={6}>
@@ -142,19 +189,19 @@ const ROrders = () => {
                     label="Ro_Date"
                     value={ro_value}
                     onChange={(newValue) => {
-                      const array = ro_value;
-                      const date = startOfDay(newValue);
-                      const index = findIndexDate(array, date);
-                      if (index >= 0) {
-                        array.splice(index, 1);
-                      } else {
-                        array.push(date);
-                      }
-                      setRovalue(array);
+                      // const array = ro_value;
+                      // const date = startOfDay(newValue);
+                      // const index = findIndexDate(array, date);
+                      // if (index >= 0) {
+                      //   array.splice(index, 1);
+                      // } else {
+                      //   array.push(date);
+                      // }
+                      setRovalue(newValue);
                     }}
-                    renderDay={renderPickerDay}
-                    renderInput={(ro_value) => (
-                      <TextField {...ro_value} fullWidth />
+                    // renderDay={renderPickerDay}
+                    renderInput={(params) => (
+                      <TextField {...params} fullWidth />
                     )}
                   />
                 </Grid>
@@ -178,7 +225,9 @@ const ROrders = () => {
                   fullWidth
                   id="add_type"
                   label="Add Type"
-                  type=""
+                  type="text"
+                  value={addtype}
+                  onChange={(e)=>setAddtype(e.target.value)}
                   variant="outlined"
                 />
               </Grid>
@@ -188,6 +237,8 @@ const ROrders = () => {
                   id="size"
                   label="Size"
                   type="number"
+                  value={size}
+                  onChange={(e)=>setSize(e.target.value)}
                   variant="outlined"
                 />
               </Grid>
@@ -197,7 +248,6 @@ const ROrders = () => {
                   id="edition"
                   label="Edition"
                   select
-                  onChange={handleChange}
                   variant="outlined"
                 >
                   {edition.map((option) => (
@@ -210,20 +260,19 @@ const ROrders = () => {
               <Grid item xs={12} md={6} xl={6}>
                 <TextField
                   fullWidth
-                  id="vendor_name"
+                  id="vendor"
                   label="Vendor Name"
                   select
-                  onChange={handleChange}
                   variant="outlined"
                 >
-                  {vendor_name.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
+                  {vendors.map((option) => (
+                    <MenuItem value={option.name}>
+                      {option.name}
                     </MenuItem>
                   ))}
                 </TextField>
               </Grid>
-              <Grid item xs={12} md={6} xl={6}>
+              {/* <Grid item xs={12} md={6} xl={6}>
                 <TextField
                   fullWidth
                   id="vendor_category"
@@ -238,25 +287,28 @@ const ROrders = () => {
                     </MenuItem>
                   ))}
                 </TextField>
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} md={6} xl={6}>
                 <TextField
                   fullWidth
                   id="color"
                   label="Color"
                   type="text"
+                  value={color}
+                  onChange={(e)=>setColor(e.target.value)}
                   variant="outlined"
                 />
               </Grid>
               <Grid item xs={12} md={6} xl={6}>
                 <TextField
                   fullWidth
-                  id="gross_amount"
+                  id="gross"
                   label="Gross Amount"
                   type="number"
                   variant="outlined"
+                  onClick={grossClick}
                   value={gross}
-                  onChange={changeGross}
+                  onChange={(e)=>setGross(Number(e.target.value))}
                 />
               </Grid>
               <Grid item xs={12} md={6} xl={6}>
@@ -266,7 +318,8 @@ const ROrders = () => {
                   label="GST"
                   type="number"
                   variant="outlined"
-                  onChange={changeGst}
+                  onClick={gstClick}
+                  onChange={(e)=>setGst(Number(e.target.value))}
                   value={gst}
                 />
               </Grid>
@@ -298,7 +351,6 @@ const ROrders = () => {
                   id="billing_address"
                   label="Billing Address"
                   select
-                  onChange={handleChange}
                   variant="outlined"
                 >
                   {billing_address.map((option) => (
@@ -313,7 +365,7 @@ const ROrders = () => {
         </Box>
         <Divider sx={{ mt: 5, mb: 5 }} />
         <Box display="flex" justifyContent="center" alignItems="center">
-          <Button variant="contained" size="large" sx={{ maxWidth: 0.5 }}>
+          <Button variant="contained" size="large" onClick={handleSubmit} sx={{ maxWidth: 0.5 }}>
             Submit
           </Button>
         </Box>

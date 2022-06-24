@@ -18,19 +18,25 @@ const DashBoard = (props) => {
   const [releaseData, setReleaseData] = React.useState([]);
   const r_columns = [
     { field: "id", headerName: "#", flex: 1 },
-    { field: "vendor.name", headerName: "Vendor", flex: 1 },
-    { field: "amount", headerName: "Amount", flex: 1 },
-    { field: "edition", headerName: "Edition", flex: 1 },
+    { field: "vendor", headerName: "Vendor", flex: 1 },
+    { field: "net_amunt", headerName: "Amount", flex: 1 },
+    { field: "edition.edition", headerName: "Edition", flex: 1 },
     { field: "view", headerName: "View", flex: 1 },
   ];
   const columns = [
     { field: "id", headerName: "#", flex: 1 },
     { field: "vendor", headerName: "Vendor", flex: 1 },
-    { field: "amount", headerName: "Amount", flex: 1 },
+    { field: "net_amount", headerName: "Amount", flex: 1 },
     { field: "view", headerName: "View", flex: 1 },
   ];
 
-  const v_columns = [{ field: "name", headerName: "Vendor Name", flex: 1 }];
+  const v_columns = [
+    { field: "id", headerName: "#", flex:1 }, 
+    { field: "Supplier_code", headerName: "Supplier Code", flex: 1 },
+    { field: "name", headerName: "Vendor Name", flex: 1 },
+    { field: "address1", headerName: "Address", flex: 1 },
+    { field: "contact_reference", headerName: "Contact Reference", flex: 1 },
+  ];
 
   useEffect(() => {
     fetch("https://poorvikadashboard.herokuapp.com/api/v1/po")
@@ -43,7 +49,7 @@ const DashBoard = (props) => {
     fetch("https://poorvikadashboard.herokuapp.com/api/v1/vendor")
       .then((data) => data.json())
       .then((data) => setVendorData(data));
-      console.log("fetched");
+      console.log("v","fetched");
   }, [props.value]);
 
   useEffect(() => {
@@ -75,7 +81,11 @@ const DashBoard = (props) => {
               </CardContent>
               <CardActions sx={{ pl: 2, pr: 2, pb: 2 }}>
                 <div style={{ height: 300, width: 1, flexGrow: 1 }}>
-                  <DataGrid rows={tableData} columns={columns} pageSize={5} />
+                  <DataGrid 
+                    rows={tableData} 
+                    columns={columns} 
+                    pageSize={5} 
+                  />
                 </div>
               </CardActions>
             </Card>

@@ -11,61 +11,104 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Page from "../components/Page";
+import Axios from "axios";
+import { SnackbarProvider,useSnackbar } from 'notistack';
 
-const vendors = [
-  {
-    value: "a",
-    label: "a",
-  },
-  {
-    value: "b",
-    label: "b",
-  },
-];
-
-const vat_percent = [
-  {
-    value: "0",
-    label: "0%",
-  },
-  {
-    value: "14",
-    label: "14%",
-  },
-  {
-    value: "25",
-    label: "25%",
-  },
-];
 const IAdd = () => {
+
+  const {enqueueSnackbar} = useSnackbar();
+
   const [price, setPrice] = useState(0);
-  const [quantity, setQuantity] = useState(1);
-  const [vatrate, setVatrate] = useState(0);
+  const [senderRef, setSenderRef] = useState('');
+  const [title,setTitle] = useState('');
+  const [quantity, setQuantity] = useState(0);
+  const [gst, setGst] = useState(0);
   const [gross, setGross] = useState(0);
-  const [vat, setVat] = useState(0);
+  const [gstamt, setGstamt] = useState(0);
+  const [vendors, setVendors] =useState([]);
+  const [branches, setBranches] =useState([]);
+  const [idofvendor,setIdofvendor]=useState(0);
+  const [idofbranch,setIdofbranch]=useState(0);
 
-  const changeQuantity = (e) => {
-    setQuantity(Number(e.target.value));
-  };
-  const changePrice = (e) => {
-    setPrice(Number(e.target.value));
-  };
-  const changeVatrate = (e) => {
-    setVatrate(Number(e.target.value));
-  };
-
+  useEffect(()=>{
+    vendors.map((v) =>(
+      setIdofvendor(v.id)
+    ))
+  },[vendors])
+  
+  useEffect(()=>{
+    branches.map((b) =>(
+      setIdofbranch(b.id)
+    ))
+  },[branches])
+  
+  useEffect(()=>{
+    Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/vendor',{
+    }).then((response) => {
+          console.log("vendor",response.data);
+          const vendors=response.data;
+          // console.log("vendor",vendors[0].name);
+          setVendors(vendors);
+        }, (error) => {
+          console.log(error);
+      });
+    },[])
+  useEffect(()=>{
+    Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/branches',{
+    }).then((response) => {
+          console.log("branches",response.data);
+          const branches=response.data;
+          // console.log("branches",branches[0].name);
+          setBranches(branches);
+        }, (error) => {
+          console.log(error);
+      });
+    },[])
+  const handleSubmit=(e)=>{
+    e.preventDefault();
+    Axios.post('https://poorvikadashboard.herokuapp.com/api/v1/po',{
+      vendor: idofvendor,
+      sender_reference: senderRef,
+      gross_amount: gross,
+      gst_amount: gstamt,
+      net_amount: gross,
+      items: [
+          {
+              title: title,
+              quantity: quantity,
+              unit_price: price,
+              net_amount: gross,
+              gst: gst,
+          },
+      ],
+      branches: idofbranch,
+  }).then((response) => {
+        console.log(response);
+        enqueueSnackbar('Added Purchase Order', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
+        window.location.reload();
+      }, (error) => {
+        enqueueSnackbar('Check the data and try again', { variant:'Error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
+        console.log(error);
+    });
+  }
   const qtClick = () => {
-    setQuantity('')
+    if(quantity===0)
+      setQuantity('')
   }
   const priceClick = () => {
-    setPrice('')
+    if(price===0)
+      setPrice('')
+  }
+  const gstClick = () => {
+    if(gst===0)
+      setGst('')
   }
   useEffect(() => {
-    const percent = vatrate / 100;
+    const percent = gst / 100;
     const total = quantity * price;
-    setVat(Math.round(total * percent));
-    setGross(vat + total);
-  }, [vatrate, quantity, price, vat]);
+    setGstamt(Math.round(total * percent));
+    setGross(gstamt + total);
+  }, [gst, quantity, price, gstamt]);
 
   return (
     <Page title="Invoices | Add">
@@ -85,12 +128,14 @@ const IAdd = () => {
               id="vendor"
               label="Vendor"
               select
+              // value={vendors}
+              // onChange={(e)=>setVendors(e.target.value)}
               helperText="Please select vendor"
               variant="outlined"
             >
               {vendors.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
+                <MenuItem key={option.id} value={option.name}>
+                  {option.name}
                 </MenuItem>
               ))}
             </TextField>
@@ -102,6 +147,8 @@ const IAdd = () => {
                   id="title"
                   label="Title"
                   type="text"
+                  value={title}
+                  onChange={(e)=>setTitle(e.target.value)}
                   variant="outlined"
                 /></Grid>
               <Grid item xs={6} md={6} xl={4}><TextField
@@ -112,7 +159,7 @@ const IAdd = () => {
                 variant="outlined"
                 onClick={priceClick}
                 value={price}
-                onChange={changePrice}
+                onChange={(e)=>setPrice(Number(e.target.value))}
               /></Grid>
               <Grid item xs={6} md={6} xl={4}><TextField
                 fullWidth
@@ -122,23 +169,17 @@ const IAdd = () => {
                 variant="outlined"
                 onClick={qtClick}
                 value={quantity}
-                onChange={changeQuantity}
-                defaultValue="1"
+                onChange={(e)=>setQuantity(Number(e.target.value))}
               /></Grid>
               <Grid item xs={6} md={6} xl={4}><TextField
-                id="vat"
+                id="gst"
                 fullWidth
-                select
-                label="Vat Rate"
+                label="GST"
                 variant="outlined"
-                value={vatrate}
-                onChange={changeVatrate}
+                onClick={gstClick}
+                value={gst}
+                onChange={(e)=>setGst(Number(e.target.value))}
               >
-                {vat_percent.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
               </TextField></Grid>
               <Grid item xs={6} md={6} xl={4}><TextField
                 fullWidth
@@ -157,20 +198,38 @@ const IAdd = () => {
               id="sender"
               label="Sender Reference"
               type="text"
+              value={senderRef}
+              onChange={(e)=>setSenderRef(e.target.value)}
               variant="outlined"
             />
+            <Typography variant="h6">Branches</Typography>
+            <TextField
+              id="branches"
+              label="Branches"
+              select
+              // value={branches}
+              // onChange={(e)=>setBranches(e.target.value)}
+              helperText="Please select the branch"
+              variant="outlined"
+            >
+              {branches.map((option) => (
+                <MenuItem key={option.id} value={option.name}>
+                  {option.name}
+                </MenuItem>
+              ))}
+            </TextField>
             <br />
             <Divider />
             <br />
             <Typography variant="h6">Total</Typography>
             <Stack spacing={1}>
               {/* <Typography>Net Amount: {}</Typography> */}
-              <Typography>Vat Amount: {vat}</Typography>
+              <Typography>GST Amount: {gstamt}</Typography>
               <Typography>Gross Amount: {gross}</Typography>
             </Stack>
           </Stack>
           <Box display="flex" justifyContent="center" alignItems="center">
-            <Button variant="contained" size="large" sx={{ maxWidth: 0.5 }}>
+            <Button variant="contained" size="large" onClick={handleSubmit} sx={{ maxWidth: 0.5 }}>
               SUBMIT
             </Button>
           </Box>
@@ -180,4 +239,10 @@ const IAdd = () => {
   );
 };
 
-export default IAdd;
+export default function IntegrationNotistack() {
+  return (
+    <SnackbarProvider maxSnack={5}>
+      <IAdd />
+    </SnackbarProvider>
+  );
+}

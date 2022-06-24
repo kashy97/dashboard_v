@@ -8,7 +8,7 @@ function App() {
   return (
     <ThemeConfig>
       <ScrollToTop />
-      <GlobalStyles />
+      <GlobalStyles />      
       <Router />
     </ThemeConfig>
   );

@@ -10,7 +10,7 @@ import { AuthProvider } from "./hooks/useAuth";
 import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(
-  <StyledEngineProvider>
+  <StyledEngineProvider injectFirst>
     <AuthProvider>
       <React.StrictMode>
         <HelmetProvider>
