@@ -18,11 +18,12 @@ import startOfDay from "date-fns/startOfDay";
 import DatePicker from "@mui/lab/DatePicker";
 import Page from "../components/Page";
 import Axios from "axios";
+import { SnackbarProvider,useSnackbar } from 'notistack';
 
 const edition = [
   {
-    value: "null",
-    label: "null",
+    value: "poorvika",
+    label: "Poorvika",
   },
 ];
 // const vendor_cat = [
@@ -31,17 +32,6 @@ const edition = [
 //     label: "null",
 //   },
 // ];
-const billing_address = [
-  {
-    value: "chennai",
-    label: "Chennai",
-  },
-  {
-    value: "bangalore",
-    label: "Bangalore",
-  },
-];
-
 
 // const CustomPickersDay = styled(PickersDay, {
 //   shouldForwardProp: (prop) => prop !== "selected"
@@ -60,6 +50,9 @@ const billing_address = [
 // }));
 
 const ROrders = () => {
+
+  const {enqueueSnackbar} = useSnackbar();
+
   const [ro_value, setRovalue] = React.useState(null);
   const [pub_value, setPubvalue] = React.useState([startOfDay(new Date())]);
   const [gross, setGross] = React.useState(0);
@@ -70,13 +63,17 @@ const ROrders = () => {
   const [size,setSize] = React.useState('');
   const [color,setColor] = React.useState('');
   const [vendors, setVendors] =React.useState([]);
+  const [branches, setBranches] = React.useState([]);
   const [idofvendor,setIdofvendor] = React.useState(0);
+  const [idofbranch,setIdofbranch] = React.useState(0);
+  const [send_date,setSendDate] = React.useState("");
+  const [send_pubdate,setSendPubDate] = React.useState("");
   // const [billing,setBilling] =React.useState(0);  
 
   React.useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/vendor',{
     }).then((response) => {
-          console.log("vendor",response.data);
+          // console.log("vendor",response.data);
           const vendors=response.data;
           // console.log("vendor",vendors[0].name);
           setVendors(vendors);
@@ -86,16 +83,49 @@ const ROrders = () => {
     },[])
 
   React.useEffect(()=>{
+    Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/branches',{
+    }).then((response) => {
+          // console.log("vendor",response.data);
+          const branches=response.data;
+          // console.log("vendor",vendors[0].name);
+          setBranches(branches);
+        }, (error) => {
+          console.log(error);
+      });
+    },[])
+
+    React.useEffect(()=>{
+      let newDate = new Date(pub_value)
+      let date = newDate.getDate();
+      let month = newDate.getMonth()+1;
+      let year = newDate.getFullYear();
+      setSendPubDate(year+'-'+month+'-'+date)
+    },[pub_value])
+
+    React.useEffect(()=>{
+      let newDate = new Date(ro_value)
+      let date = newDate.getDate();
+      let month = newDate.getMonth()+1;
+      let year = newDate.getFullYear();
+      setSendDate(year+'-'+month+'-'+date)
+    },[ro_value])
+  React.useEffect(()=>{
     vendors.map((v)=>(
       setIdofvendor(v.id)
     ))
   },[vendors])
 
+  React.useEffect(()=>{
+    branches.map((b)=>(
+      setIdofbranch(b.id)
+    ))
+  },[branches])
+
   const handleSubmit=(e) =>{
     e.preventDefault();
     Axios.post('https://poorvikadashboard.herokuapp.com/api/v1/ro',{
         // id: id,
-        ro_date: ro_value,
+        ro_date: send_date,
         Add_type: addtype,
         Size: size,
         vendor: idofvendor,
@@ -104,20 +134,22 @@ const ROrders = () => {
         gst: gst,
         gst_amount: gsta,
         net_amunt: net,
-        billing_address: billing_address,
+        billing_address: idofbranch,
         edition: [
             {
-                edition: edition,
+                edition: "Test Edition 1",
             }
         ],
         pub_date: [
             {
-                pub_date: pub_value,
+                pub_date: send_pubdate,
             },
         ],
     }).then((response) => {
+      enqueueSnackbar('Data Entry Successful', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
       console.log(response);
     },(error) => {
+      enqueueSnackbar('Check Data and Try Again', { variant:'Error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
       console.log(error);
     });
   }
@@ -147,10 +179,11 @@ const ROrders = () => {
   //     />
   //   );
   // };
+
   React.useEffect(() => {
     // code to run when state changes
     const percent = gst / 100;
-    setGsta(gross * percent);
+    setGsta(Math.round(gross * percent));
     setNet(Number(gsta + gross));
   }, [gst,gross,gsta]);
 
@@ -188,6 +221,7 @@ const ROrders = () => {
                   <DatePicker
                     label="Ro_Date"
                     value={ro_value}
+                    inputFormat="yyyy-MM-dd"
                     onChange={(newValue) => {
                       // const array = ro_value;
                       // const date = startOfDay(newValue);
@@ -200,6 +234,7 @@ const ROrders = () => {
                       setRovalue(newValue);
                     }}
                     // renderDay={renderPickerDay}
+                    
                     renderInput={(params) => (
                       <TextField {...params} fullWidth />
                     )}
@@ -211,6 +246,7 @@ const ROrders = () => {
                   <DatePicker
                     label="Published Date"
                     value={pub_value}
+                    inputFormat="yyyy-MM-dd"
                     onChange={(newValue) => {
                       setPubvalue(newValue);
                     }}
@@ -236,7 +272,7 @@ const ROrders = () => {
                   fullWidth
                   id="size"
                   label="Size"
-                  type="number"
+                  type="text"
                   value={size}
                   onChange={(e)=>setSize(e.target.value)}
                   variant="outlined"
@@ -251,7 +287,7 @@ const ROrders = () => {
                   variant="outlined"
                 >
                   {edition.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
+                    <MenuItem value={option.value}>
                       {option.label}
                     </MenuItem>
                   ))}
@@ -353,9 +389,9 @@ const ROrders = () => {
                   select
                   variant="outlined"
                 >
-                  {billing_address.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
+                  {branches.map((option) => (
+                    <MenuItem key={option.id} value={option.name}>
+                      {option.name}
                     </MenuItem>
                   ))}
                 </TextField>
@@ -374,4 +410,11 @@ const ROrders = () => {
   );
 };
 
-export default ROrders;
+export default function IntegrationNotistack() {
+  return (
+    <SnackbarProvider maxSnack={5}>
+      <ROrders />
+    </SnackbarProvider>
+  );
+}
+
