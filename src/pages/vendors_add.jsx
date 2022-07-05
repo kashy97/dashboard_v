@@ -47,7 +47,9 @@ const VAdd = () => {
         console.log(response); 
         enqueueSnackbar('Succesfully Updated', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
         history.push("/dashboard/vendors")
-        window.location.reload()
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000); 
       }, (error) => {
         console.log(error);
         enqueueSnackbar('Check values and Try Again', { variant:'Error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );

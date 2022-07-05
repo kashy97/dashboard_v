@@ -13,6 +13,7 @@ import Orders from "./pages/invoices";
 import Vendors from "./pages/vendors";
 import VAdd from "./pages/vendors_add";
 import VUpdate from "./pages/vendors_update";
+import IUpdate from "./pages/invoices_update";
 import ROrders from "./pages/release_orders";
 import Register from "./auth/register";
 import RequireAuth from "./routes/RequireAuth";
@@ -88,6 +89,14 @@ export default function Router() {
           element: (
             <RequireAuth>
               <IAdd />
+            </RequireAuth>
+          ),
+        },
+        {
+          path: "invoices/update/:id",
+          element: (
+            <RequireAuth>
+                <IUpdate />
             </RequireAuth>
           ),
         },

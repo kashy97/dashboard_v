@@ -1,37 +1,39 @@
 import { Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
 import React from "react";
 import Page from "../components/Page";
+import axios from "axios";
 import {createBrowserHistory} from 'history';
 import { SnackbarProvider,useSnackbar } from 'notistack';
+import { useEffect } from "react";
 
 const Vendors = (props) => {
 
   const {enqueueSnackbar} = useSnackbar();
   const history = createBrowserHistory();
+  const url="https://poorvikadashboard.herokuapp.com/api/v1/vendor";
   const [vendorData,setVendorData]= React.useState([]);
 
-  React.useEffect(() => {
-    fetch("https://poorvikadashboard.herokuapp.com/api/v1/vendor")
-      .then((data) => data.json())
-      .then((data) => setVendorData(data));
-      // console.log("v","fetched");
-  }, [props.value]);
+  useEffect(()=> {
+    axios.get(url)
+    .then((res) => setVendorData(res.data));
+      // console.log("v",vendorData);
+    }, []);
 
   const deleteVendor = (id) => {
     if(window.confirm("Are you sure you want to delete")){
-    fetch(`https://poorvikadashboard.herokuapp.com/api/v1/vendor/${id}`, { method: 'DELETE' })
-      .then (res=> {
-        // console.log("deleted",res)
-        enqueueSnackbar('Successfully deleted' , { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
-        window.location.reload(false)
+      axios.delete(`${url}/${id}`).then(()=> {
+          // console.log("deleted",res)
+          enqueueSnackbar('Successfully deleted' , { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
+          window.location.reload(false)
       })
-      .catch (err => console.log(err))
   }}
 
   const updateVendor = (id) => {
     // console.log(id) 
     history.push(`/dashboard/vendors/update/${id}`)
-    window.location.reload(false)
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000); 
   }
   
   return (
@@ -53,7 +55,7 @@ const Vendors = (props) => {
           <Grid item xs={12} md={6} xl={4}>
             <Card 
               elevation={3}
-              sx={{ width:1, borderRadius: 5, minHeight: '25vh', m:'2vh', p:'1vh'}}
+              sx={{ maxWidth:1, borderRadius: 5, minHeight: '25vh', m:'1vh', p:'1vh'}}
             >
               <CardContent>
                 <Typography>
@@ -76,7 +78,7 @@ const Vendors = (props) => {
                 <Typography>
                   Address
                 </Typography>
-                <Typography sx={{ mr:1.5}} wrap variant="body2">
+                <Typography noWrap variant="body2">
                 {v.address1},{v.address2},{v.city},{v.state},{v.country}-{v.zipcode}
                 </Typography>
                 <Typography sx={{ mt:1.5 , textAlign:'center'}}>
@@ -88,7 +90,7 @@ const Vendors = (props) => {
                 </Typography>
                 {v.contact_reference}
               </CardContent>
-              <CardActions sx={{ width:'100%', maxWidth:'35%', margin:'0 auto', textAlign:'center'}}>
+              <CardActions sx={{justifyContent:'center'}}>
                 <Button onClick={()=>updateVendor(v.id)} size="small">Edit</Button>
                 <Button onClick={()=>deleteVendor(v.id)} size="small">Delete</Button>
               </CardActions>

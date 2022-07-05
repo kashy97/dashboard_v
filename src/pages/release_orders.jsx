@@ -8,51 +8,51 @@ import {
   Typography,
   Container,
   Grid,
+  Select,
+  InputLabel,
+  OutlinedInput,
 } from "@mui/material";
-// import { styled } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import React from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-// import PickersDay from "@mui/lab/PickersDay";
+import PickersDay from "@mui/lab/PickersDay";
 import startOfDay from "date-fns/startOfDay";
 import DatePicker from "@mui/lab/DatePicker";
 import Page from "../components/Page";
 import Axios from "axios";
 import { SnackbarProvider,useSnackbar } from 'notistack';
 
-const edition = [
-  {
-    value: "poorvika",
-    label: "Poorvika",
-  },
-];
-// const vendor_cat = [
-//   {
-//     value: "null",
-//     label: "null",
-//   },
-// ];
+const CustomPickersDay = styled(PickersDay, {
+  shouldForwardProp: (prop) => prop !== "selected"
+})(({ theme, selected }) => ({
+  ...(selected && {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.white,
+    "&:hover, &:focus": {
+      backgroundColor: theme.palette.primary.dark
+    },
+    borderTopLeftRadius: "50%",
+    borderBottomLeftRadius: "50%",
+    borderTopRightRadius: "50%",
+    borderBottomRightRadius: "50%"
+  })
+}));
 
-// const CustomPickersDay = styled(PickersDay, {
-//   shouldForwardProp: (prop) => prop !== "selected"
-// })(({ theme, selected }) => ({
-//   ...(selected && {
-//     backgroundColor: theme.palette.primary.main,
-//     color: theme.palette.common.white,
-//     "&:hover, &:focus": {
-//       backgroundColor: theme.palette.primary.dark
-//     },
-//     borderTopLeftRadius: "50%",
-//     borderBottomLeftRadius: "50%",
-//     borderTopRightRadius: "50%",
-//     borderBottomRightRadius: "50%"
-//   })
-// }));
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 const ROrders = () => {
 
   const {enqueueSnackbar} = useSnackbar();
-
   const [ro_value, setRovalue] = React.useState(null);
   const [pub_value, setPubvalue] = React.useState([startOfDay(new Date())]);
   const [gross, setGross] = React.useState(0);
@@ -66,16 +66,16 @@ const ROrders = () => {
   const [branches, setBranches] = React.useState([]);
   const [idofvendor,setIdofvendor] = React.useState(0);
   const [idofbranch,setIdofbranch] = React.useState(0);
+  // const [idofedition,setIdofedition] = React.useState(0);
   const [send_date,setSendDate] = React.useState("");
-  const [send_pubdate,setSendPubDate] = React.useState("");
-  // const [billing,setBilling] =React.useState(0);  
+  const [send_pubdate,setSendPubDate] = React.useState([]);
+  const [edition,setEdition] = React.useState([]);
 
   React.useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/vendor',{
     }).then((response) => {
           // console.log("vendor",response.data);
           const vendors=response.data;
-          // console.log("vendor",vendors[0].name);
           setVendors(vendors);
         }, (error) => {
           console.log(error);
@@ -83,11 +83,21 @@ const ROrders = () => {
     },[])
 
   React.useEffect(()=>{
+    Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/Edition',{
+    }).then((response) => {
+      console.log("edition",response.data);
+      const editions=response.data; 
+      setEdition(editions);
+    }, (error) => {
+      console.log(error);
+    });
+  },[])
+
+  React.useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/branches',{
     }).then((response) => {
           // console.log("vendor",response.data);
           const branches=response.data;
-          // console.log("vendor",vendors[0].name);
           setBranches(branches);
         }, (error) => {
           console.log(error);
@@ -95,12 +105,16 @@ const ROrders = () => {
     },[])
 
     React.useEffect(()=>{
-      let newDate = new Date(pub_value)
-      let date = newDate.getDate();
-      let month = newDate.getMonth()+1;
-      let year = newDate.getFullYear();
-      setSendPubDate(year+'-'+month+'-'+date)
-    },[pub_value])
+      let list=[...pub_value];
+      for (let i=0;i<list.length;i++){
+        let newDate = new Date(pub_value[i])
+        let date = newDate.getDate();
+        let month = newDate.getMonth()+1;
+        let year = newDate.getFullYear();
+        let data= year+'-'+month+'-'+date;
+        setSendPubDate(...data)
+      }
+    },[pub_value, send_pubdate])
 
     React.useEffect(()=>{
       let newDate = new Date(ro_value)
@@ -115,11 +129,26 @@ const ROrders = () => {
     ))
   },[vendors])
 
+  // React.useEffect(()=>{
+  //   edition.map((e) => (
+  //     setIdofedition(e.id)
+  //   ))
+  // },[edition])
   React.useEffect(()=>{
     branches.map((b)=>(
       setIdofbranch(b.id)
     ))
   },[branches])
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setEdition(
+      typeof value === 'string' ? value.split(',') : value,
+    );
+    console.log("edition changed",edition);
+  };
 
   const handleSubmit=(e) =>{
     e.preventDefault();
@@ -135,11 +164,7 @@ const ROrders = () => {
         gst_amount: gsta,
         net_amunt: net,
         billing_address: idofbranch,
-        edition: [
-            {
-                edition: "Test Edition 1",
-            }
-        ],
+        edition: edition,
         pub_date: [
             {
                 pub_date: send_pubdate,
@@ -154,31 +179,31 @@ const ROrders = () => {
     });
   }
 
-  // const findDate = (dates, date) => {
-  //   const dateTime = date.getTime();
-  //   return dates.find((item) => item.getTime() === dateTime);
-  // };
+  const findDate = (dates, date) => {
+    const dateTime = date.getTime();
+    return dates.find((item) => item.getTime() === dateTime);
+  };
 
-  // const findIndexDate = (dates, date) => {
-  //   const dateTime = date.getTime();
-  //   return dates.findIndex((item) => item.getTime() === dateTime);
-  // };
+  const findIndexDate = (dates, date) => {
+    const dateTime = date.getTime();
+    return dates.findIndex((item) => item.getTime() === dateTime);
+  };
 
-  // const renderPickerDay = (date, selectedDates, pickersDayProps) => {
-  //   if (!ro_value) {
-  //     return <PickersDay {...pickersDayProps} />;
-  //   }
+  const renderPickerDay = (date, selectedDates, pickersDayProps) => {
+    if (!pub_value) {
+      return <PickersDay {...pickersDayProps} />;
+    }
 
-  //   const selected = findDate(ro_value, date);
+    const selected = findDate(pub_value, date);
 
-  //   return (
-  //     <CustomPickersDay
-  //       {...pickersDayProps}
-  //       disableMargin
-  //       selected={selected}
-  //     />
-  //   );
-  // };
+    return (
+      <CustomPickersDay
+        {...pickersDayProps}
+        disableMargin
+        selected={selected}
+      />
+    );
+  };
 
   React.useEffect(() => {
     // code to run when state changes
@@ -196,7 +221,7 @@ const ROrders = () => {
     if(gross===0)
       setGross('')
   }
-  // console.log("Dates",ro_value)
+  console.log("Dates",send_pubdate)
   return (
     <Page title="Release Order">
       <Container maxWidth="xl">
@@ -223,17 +248,8 @@ const ROrders = () => {
                     value={ro_value}
                     inputFormat="yyyy-MM-dd"
                     onChange={(newValue) => {
-                      // const array = ro_value;
-                      // const date = startOfDay(newValue);
-                      // const index = findIndexDate(array, date);
-                      // if (index >= 0) {
-                      //   array.splice(index, 1);
-                      // } else {
-                      //   array.push(date);
-                      // }
                       setRovalue(newValue);
                     }}
-                    // renderDay={renderPickerDay}
                     
                     renderInput={(params) => (
                       <TextField {...params} fullWidth />
@@ -248,8 +264,17 @@ const ROrders = () => {
                     value={pub_value}
                     inputFormat="yyyy-MM-dd"
                     onChange={(newValue) => {
-                      setPubvalue(newValue);
+                      const array = [...pub_value];
+                      const date = startOfDay(newValue);
+                      const index = findIndexDate(array, date);
+                      if (index >= 0) {
+                        array.splice(index, 1);
+                      } else {
+                        array.push(date);
+                      }
+                      setPubvalue(array);           
                     }}
+                    renderDay={renderPickerDay}
                     renderInput={(params) => (
                       <TextField {...params} fullWidth />
                     )}
@@ -279,19 +304,32 @@ const ROrders = () => {
                 />
               </Grid>
               <Grid item xs={12} md={6} xl={6}>
-                <TextField
+              <InputLabel id="edition">Edition</InputLabel>
+                <Select
                   fullWidth
+                  labelId="edition"
                   id="edition"
-                  label="Edition"
-                  select
+                  displayEmpty
+                  label="Edition" 
+                  value={edition}
+                  onChange={handleChange}
+                  multiple
+                  renderInput={(params) => (
+                    <TextField {...params} fullWidth />
+                  )}
+                  input={<OutlinedInput />}
                   variant="outlined"
+                  MenuProps={MenuProps} 
                 >
+                  <MenuItem disabled value="">
+                    <em>Select Edition</em>
+                  </MenuItem>
                   {edition.map((option) => (
-                    <MenuItem value={option.value}>
-                      {option.label}
+                    <MenuItem key={option.Edition} value={option.Edition}>
+                      {option.Edition}
                     </MenuItem>
                   ))}
-                </TextField>
+                </Select>
               </Grid>
               <Grid item xs={12} md={6} xl={6}>
                 <TextField

@@ -17,18 +17,24 @@ import { SnackbarProvider,useSnackbar } from 'notistack';
 const IAdd = () => {
 
   const {enqueueSnackbar} = useSnackbar();
-
-  const [price, setPrice] = useState(0);
+  const [itemList, setItemList] = useState([{
+    unit_price:0,
+    title:'',
+    quantity:0,
+    gst:0,
+    net_amount:0,
+  }]);
   const [senderRef, setSenderRef] = useState('');
-  const [title,setTitle] = useState('');
-  const [quantity, setQuantity] = useState(0);
-  const [gst, setGst] = useState(0);
-  const [gross, setGross] = useState(0);
-  const [gstamt, setGstamt] = useState(0);
+  const [net,setNet] =useState(0);
+  const [gst_amount, setGst_amount] = useState(0);
+  const [gstAmount, setGstAmount] = useState(0);
   const [vendors, setVendors] =useState([]);
+  const [gst_total,setGst_total]= useState(0);
   const [branches, setBranches] =useState([]);
   const [idofvendor,setIdofvendor]=useState(0);
   const [idofbranch,setIdofbranch]=useState(0);
+  const [noOfItems,setNoOfItems]=useState(1);
+  const [search_index, setSearch_index]= useState(0);
 
   useEffect(()=>{
     vendors.map((v) =>(
@@ -43,11 +49,20 @@ const IAdd = () => {
   },[branches])
   
   useEffect(()=>{
+    const list=[...itemList]
+    for(let i=0;i<noOfItems;i++){
+      const percent = list[i].gst / 100;
+      const total= list[i].unit_price* list[i].quantity;
+      setGst_total(Math.round(total*percent));
+      setGstAmount(gst_total)
+      setNet(list[i].net_amount)
+    }
+  }, [gst_total, itemList, net, noOfItems])
+  useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/vendor',{
     }).then((response) => {
           console.log("vendor",response.data);
           const vendors=response.data;
-          // console.log("vendor",vendors[0].name);
           setVendors(vendors);
         }, (error) => {
           console.log(error);
@@ -58,7 +73,6 @@ const IAdd = () => {
     }).then((response) => {
           console.log("branches",response.data);
           const branches=response.data;
-          // console.log("branches",branches[0].name);
           setBranches(branches);
         }, (error) => {
           console.log(error);
@@ -69,46 +83,74 @@ const IAdd = () => {
     Axios.post('https://poorvikadashboard.herokuapp.com/api/v1/po',{
       vendor: idofvendor,
       sender_reference: senderRef,
-      gross_amount: gross,
-      gst_amount: gstamt,
-      net_amount: gross,
-      items: [
-          {
-              title: title,
-              quantity: quantity,
-              unit_price: price,
-              net_amount: gross,
-              gst: gst,
-          },
-      ],
+      gst_amount: gstAmount,
+      net_amount: net,
+      items: itemList,
       branches: idofbranch,
   }).then((response) => {
         console.log(response);
         enqueueSnackbar('Added Purchase Order', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);     
       }, (error) => {
         enqueueSnackbar('Check the data and try again', { variant:'Error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
         console.log(error);
     });
   }
-  const qtClick = () => {
-    if(quantity===0)
-      setQuantity('')
-  }
-  const priceClick = () => {
-    if(price===0)
-      setPrice('')
-  }
-  const gstClick = () => {
-    if(gst===0)
-      setGst('')
-  }
+
+  const handleItemChange=(e,index)=>{
+    const list =[...itemList];
+    list[index][e.target.name]=e.target.value;
+    setItemList(list);
+};
+
+const handleItemRemove= (index) => {
+    setNoOfItems(noOfItems-1)
+    const list=[...itemList];
+    // gst_amount.map((i)=>{
+    //   while(i.gst_amount[index]===index){
+    //     gstAmount -= i.gst_amount[index]
+    //     setGstAmount(gstAmount)}
+    // })
+    list.splice(index,1);
+    setItemList(list);
+};
+
+const handleItemAdd = () => {
+    setNoOfItems(noOfItems+1);
+    setItemList([...itemList, {
+      unit_price:0,
+      title:'',
+      quantity:0,
+      gst:0,
+      net_amount:0,
+  }]);
+};
+
+  // const qtClick = (e,index) => {
+  //   const list =[...itemList];
+  //   if(list[index][e.target.value]===0)
+  //     list[index][e.target.value]="";
+  // }
+  // const priceClick = (e,index) => {
+  //   const list =[...itemList];
+  //   if(list[index][e.target.value]===0)
+  //     list[index][e.target.value]="";
+  // }
+  // const gstClick = (e,index) => {
+  //   const list =[...itemList];
+  //   if(list[index][e.target.value]===0)
+  //     list[index][e.target.value]="";
+  // }
+
   useEffect(() => {
-    const percent = gst / 100;
-    const total = quantity * price;
-    setGstamt(Math.round(total * percent));
-    setGross(gstamt + total);
-  }, [gst, quantity, price, gstamt]);
+    let list = [...itemList];
+    const percent = list[search_index].gst / 100;
+    const total = list[search_index].quantity * list[search_index].unit_price;
+    setGst_amount(Math.round(total * percent));
+    list[search_index].net_amount=gst_amount + total;
+  }, [gst_amount, itemList, search_index]);
 
   return (
     <Page title="Invoices | Add">
@@ -140,60 +182,94 @@ const IAdd = () => {
               ))}
             </TextField>
             <Typography variant="h6">Items</Typography>
-            <Grid container spacing={2} sx={{ pr: 5 }}>
-              <Grid item xs={6} md={6} xl={4}>
-                <TextField
+            {itemList.map((items,index) => (
+            <div key={index} className="item-list">
+              <Grid container key={index} spacing={2} sx={{ pr: 5 }}>
+                <Grid item xs={6} md={6} xl={4}>
+                  <TextField
+                    fullWidth
+                    id="title"
+                    name="title"
+                    label="Title"
+                    onClick={()=>setSearch_index(index)}
+                    type="text"
+                    value={items.title}
+                    onChange={(e)=>handleItemChange(e,index)}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item xs={6} md={6} xl={4}><TextField
                   fullWidth
-                  id="title"
-                  label="Title"
-                  type="text"
-                  value={title}
-                  onChange={(e)=>setTitle(e.target.value)}
+                  id="price"
+                  name="unit_price"
+                  label="Price"
+                  type="number"
                   variant="outlined"
+                  onClick={()=>setSearch_index(index)}
+                  value={items.unit_price}
+                  onChange={(e)=>handleItemChange(e,index)}
                 /></Grid>
-              <Grid item xs={6} md={6} xl={4}><TextField
-                fullWidth
-                id="price"
-                label="Price"
-                type="number"
-                variant="outlined"
-                onClick={priceClick}
-                value={price}
-                onChange={(e)=>setPrice(Number(e.target.value))}
-              /></Grid>
-              <Grid item xs={6} md={6} xl={4}><TextField
-                fullWidth
-                id="quantity"
-                label="Quantity"
-                type="number"
-                variant="outlined"
-                onClick={qtClick}
-                value={quantity}
-                onChange={(e)=>setQuantity(Number(e.target.value))}
-              /></Grid>
-              <Grid item xs={6} md={6} xl={4}><TextField
-                id="gst"
-                fullWidth
-                label="GST"
-                variant="outlined"
-                onClick={gstClick}
-                value={gst}
-                onChange={(e)=>setGst(Number(e.target.value))}
-              >
-              </TextField></Grid>
-              <Grid item xs={6} md={6} xl={4}><TextField
-                fullWidth
-                id="gross"
-                label="Gross Amount"
-                type="number"
-                variant="outlined"
-                value={gross}
-                disabled
-              /></Grid>
-            </Grid>
-            {/* <Button sx={{ maxWidth: 8 }} size="medium" variant="outlined">
-            +
-          </Button> */}
+                <Grid item xs={6} md={6} xl={4}><TextField
+                  fullWidth
+                  id="quantity"
+                  name="quantity"
+                  label="Quantity"
+                  type="number"
+                  variant="outlined"
+                  onClick={()=>setSearch_index(index)}
+                  value={items.quantity}
+                  onChange={(e)=>handleItemChange(e,index)}
+                /></Grid>
+                <Grid item xs={6} md={6} xl={4}><TextField
+                  id="gst"
+                  name="gst"
+                  fullWidth
+                  label="GST"
+                  variant="outlined"
+                  onClick={()=>setSearch_index(index)}
+                  value={items.gst}
+                  onChange={(e)=>handleItemChange(e,index)}
+                >
+                </TextField></Grid>
+                <Grid item xs={6} md={6} xl={4}><TextField
+                  fullWidth
+                  id="gross"
+                  name="net_amount"
+                  label="Gross Amount"
+                  type="number"
+                  variant="outlined"
+                  onClick={()=>setSearch_index(index)}
+                  value={items.net_amount}
+                  onChange={(e)=>handleItemChange(e,index)}
+                  disabled
+                /></Grid>
+                {itemList.length!==1 && (
+                <Grid item xs={6} md={6} xl={4}>
+                  <Button
+                  sx={{ maxWidth: 8}} 
+                  size="medium" 
+                  variant="outlined"
+                  onClick={()=>handleItemRemove(index)}
+                  >
+                    -
+                  </Button>
+                  </Grid>
+                )}
+              </Grid>
+              {itemList.length - 1 === index && (
+                <div className="plus-btn">
+                  <Button 
+                  sx={{ maxWidth: 8}} 
+                  size="medium" 
+                  variant="outlined"
+                  onClick={handleItemAdd}
+                  >
+                  +
+                  </Button>
+                </div>
+              )}
+            </div>
+            ))}
             <TextField
               id="sender"
               label="Sender Reference"
@@ -224,8 +300,8 @@ const IAdd = () => {
             <Typography variant="h6">Total</Typography>
             <Stack spacing={1}>
               {/* <Typography>Net Amount: {}</Typography> */}
-              <Typography>GST Amount: {gstamt}</Typography>
-              <Typography>Gross Amount: {gross}</Typography>
+              <Typography>GST Amount: {gstAmount}</Typography>
+              <Typography>Gross Amount: {net}</Typography>
             </Stack>
           </Stack>
           <Box display="flex" justifyContent="center" alignItems="center">

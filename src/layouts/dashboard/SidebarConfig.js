@@ -26,11 +26,11 @@ const sidebarConfig = [
     path: "/dashboard/release_orders",
     icon: getIcon("eva:file-text-fill"),
   },
-  //   {
-  //     title: 'login',
-  //     path: '/login',
-  //     icon: getIcon('eva:lock-fill')
-  //   },
+  {
+    title: 'edition',
+    path: '/dashboard/edition',
+    icon: getIcon('eva:lock-fill')
+  },
   //   {
   //     title: 'register',
   //     path: '/register',

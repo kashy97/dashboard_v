@@ -46,8 +46,10 @@ const VUpdate=(props) =>{
           console.log(response);
           if(response.status === 200) {
             history.push("/dashboard/vendors")
-            window.location.reload(false)
             enqueueSnackbar('Succesfully Updated', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } ); 
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000); 
           }
         }, (error) => {
           enqueueSnackbar('Check Data and Try Again', { variant:'Error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
