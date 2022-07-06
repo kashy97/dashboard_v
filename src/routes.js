@@ -4,7 +4,6 @@ import DashboardLayout from "./layouts/dashboard";
 import LogoOnlyLayout from "./layouts/LogoOnlyLayout";
 //
 import Login from "./auth/login";
-// import RequireAuth from "./routes/RequireAuth";
 import DashBoard from "./pages/dashboard";
 import Profile from "./pages/profile";
 import Team from "./pages/team";
@@ -43,105 +42,105 @@ export default function Router() {
         {
           path: "profile",
           element: (
-            <RequireAuth>
+            // <RequireAuth>
               <Profile />
-            </RequireAuth>
+            // </RequireAuth>
           ),
         },
         {
           path: "profile/edit",
           element: (
-            <RequireAuth>
+            // <RequireAuth>
               <Team />
-            </RequireAuth>
+            // </RequireAuth>
           ),
         },
         {
           path: "vendors",
           element: (
-            <RequireAuth>
+            // <RequireAuth>
               <Vendors />
-            </RequireAuth>
+            // </RequireAuth>
           ),
         },
         {
           path: "vendors/add",
           element: (
-            <RequireAuth>
+            // <RequireAuth>
               <VAdd />
-            </RequireAuth>
+            // </RequireAuth>
           ),
         },
         {
           path: "vendors/update/:id",
           element: (
-            <RequireAuth>
+            // <RequireAuth>
                 <VUpdate />
-            </RequireAuth>
+            // </RequireAuth>
           ),
         },
         {
           path: "branches",
           element: (
-            <RequireAuth>
+            // <RequireAuth>
               <Branches />
-            </RequireAuth>
+            // </RequireAuth>
           ),
         },
         {
           path: "branches/add",
           element: (
-            <RequireAuth>
+            // <RequireAuth>
               <BAdd />
-            </RequireAuth>
+            // </RequireAuth>
           ),
         },
         {
           path: "branches/update/:id",
           element: (
-            <RequireAuth>
+            // <RequireAuth>
                 <BUpdate />
-            </RequireAuth>
+            // </RequireAuth>
           ),
         },
         {
           path: "invoices",
           element: (
-            <RequireAuth>
+            // <RequireAuth>
               <Orders />
-            </RequireAuth>
+            // </RequireAuth>
           ),
         },
         {
           path: "invoices/add",
           element: (
-            <RequireAuth>
+            // <RequireAuth>
               <IAdd />
-            </RequireAuth>
+            // </RequireAuth>
           ),
         },
         {
           path: "invoices/update/:id",
           element: (
-            <RequireAuth>
+            // <RequireAuth>
                 <IUpdate />
-            </RequireAuth>
+            // </RequireAuth>
           ),
         },
         {
           path: "release_orders",
           element: (
-            <RequireAuth>
+            // <RequireAuth>
               <ROrders />
-            </RequireAuth>
+            // </RequireAuth>
           ),
         },
         {
           path: "edition",
           element: (
-            <RequireAuth>
+            // <RequireAuth>
               <Edition />
-            </RequireAuth>
+            // </RequireAuth>
           ),
         },
       ],

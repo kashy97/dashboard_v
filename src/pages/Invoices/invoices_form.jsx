@@ -29,8 +29,8 @@ const IAdd = () => {
   const [gst_amount, setGst_amount] = useState(0);
   const [gstAmount, setGstAmount] = useState([]);
   const [vendors, setVendors] =useState([]);
-  const [totalGross,setTotalGross]=useState(0);
-  const [totalGst,setTotalGst]=useState(0);
+  // const [totalGross,setTotalGross]=useState(0);
+  // const [totalGst,setTotalGst]=useState(0);
   const [branches, setBranches] =useState([]);
   const [idofvendor,setIdofvendor]=useState(0);
   const [idofbranch,setIdofbranch]=useState(0);
@@ -49,10 +49,12 @@ const IAdd = () => {
     ))
   },[branches])
   
-  useEffect(()=>{
-    setTotalGst(gstAmount.reduce((a,b)=>a=a+b,0))
-    setTotalGross(net.reduce((p,q)=>p=p+q,0))
-  },[gstAmount, noOfItems, net])
+  // useEffect(()=>{
+  //   if(gstAmount>0 && net>0){
+  //   for(let i=0;i<noOfItems;i++){
+  //   setTotalGst(gstAmount[i])
+  //   setTotalGross(net[i])}}
+  // },[gstAmount, noOfItems, net])
   
   useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/vendor',{
@@ -125,9 +127,9 @@ const handleItemChange=(e,index)=>{
   const percent = list[index].gst / 100;
   const total = list[index].quantity * list[index].unit_price;
   setGst_amount(Math.round(total * percent));
-  gstAmount[index]=gst_amount;
+  setGstAmount(gst_amount);
   list[index].net_amount=gst_amount + total;
-  net[index]=list[index].net_amount;
+  setNet(list[index].net_amount);
   setItemList(list);
 };
 
@@ -303,8 +305,8 @@ const handleItemChange=(e,index)=>{
             <Typography variant="h6">Total</Typography>
             <Stack spacing={1}>
               {/* <Typography>Net Amount: {}</Typography> */}
-              <Typography>GST Amount: {totalGst}</Typography>
-              <Typography>Gross Amount: {totalGross}</Typography>
+              <Typography>GST Amount: {gstAmount}</Typography>
+              <Typography>Gross Amount: {net}</Typography>
             </Stack>
           </Stack>
           <Box display="flex" justifyContent="center" alignItems="center">
