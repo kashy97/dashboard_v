@@ -29,6 +29,8 @@ const IAdd = () => {
   const [gst_amount, setGst_amount] = useState(0);
   const [gstAmount, setGstAmount] = useState(0);
   const [vendors, setVendors] =useState([]);
+  const [totalGross,setTotalGross]=useState(0);
+  const [totalGst,setTotalGst]=useState(0);
   const [gst_total,setGst_total]= useState(0);
   const [branches, setBranches] =useState([]);
   const [idofvendor,setIdofvendor]=useState(0);
@@ -48,16 +50,16 @@ const IAdd = () => {
     ))
   },[branches])
   
-  useEffect(()=>{
-    const list=[...itemList]
-    for(let i=0;i<noOfItems;i++){
-      const percent = list[i].gst / 100;
-      const total= list[i].unit_price* list[i].quantity;
-      setGst_total(Math.round(total*percent));
-      setGstAmount(gst_total)
-      setNet(list[i].net_amount)
-    }
-  }, [gst_total, itemList, net, noOfItems])
+  // useEffect(()=>{
+  //   const list=[...itemList]
+  //   for(let i=0;i<noOfItems;i++){
+  //     const percent = list[i].gst / 100;
+  //     const total= list[i].unit_price* list[i].quantity;
+  //     setGst_total(Math.round(total*percent));
+  //     setGstAmount(gst_total)
+  //     setNet(list[i].net_amount)
+  //   }
+  // }, [gst_total, itemList, net, noOfItems])
   useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/vendor',{
     }).then((response) => {
@@ -305,8 +307,8 @@ const handleItemChange=(e,index)=>{
             <Typography variant="h6">Total</Typography>
             <Stack spacing={1}>
               {/* <Typography>Net Amount: {}</Typography> */}
-              <Typography>GST Amount: {gstAmount}</Typography>
-              <Typography>Gross Amount: {net}</Typography>
+              <Typography>GST Amount: {totalGst}</Typography>
+              <Typography>Gross Amount: {totalGross}</Typography>
             </Stack>
           </Stack>
           <Box display="flex" justifyContent="center" alignItems="center">
