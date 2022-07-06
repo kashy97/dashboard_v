@@ -1,77 +1,71 @@
-import React from "react";
-import Page from "../components/Page";
-import { Container, Box, Grid, TextField, Typography, Stack, Button, Divider } from "@mui/material";
 import Axios from 'axios';
-import { useEffect, useState } from "react";
-import { createBrowserHistory } from "history";
-import { useParams } from "react-router-dom";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Divider,
+  Container,
+  Grid,
+  Stack,
+} from "@mui/material";
+import React, { useState } from "react";
+import Page from "../../components/Page";
 import { SnackbarProvider,useSnackbar } from 'notistack';
+import { createBrowserHistory } from 'history';
 
-const VUpdate=(props) =>{
+const VAdd = () => {
 
-    let {id} = useParams();
-    const {enqueueSnackbar} = useSnackbar();
-    const history=createBrowserHistory();
-    const url="https://poorvikadashboard.herokuapp.com/api/v1/vendor/"
+  const history= createBrowserHistory();
+  const {enqueueSnackbar} = useSnackbar();
+  const url="https://poorvikadashboard.herokuapp.com/api/v1/vendor"
+  const [vendorData,setVendorData]= useState({
+    Supplier_code:"",
+    name:"",
+    email:"",
+    zipcode:"",
+    phone:"",
+    address1:"",
+    address2:"",
+    city:"",
+    state:"",
+    country:"",
+    contact_person:"",
+    contact_reference:"",
+  })
 
-    const [vendorData,setVendorData]= useState({
-      Supplier_code:"",
-      name:"",
-      email:"",
-      zipcode:"",
-      phone:"",
-      address1:"",
-      address2:"",
-      city:"",
-      state:"",
-      country:"",
-      contact_person:"",
-      contact_reference:"",
-    })
-
-    useEffect(()=>{
-      // const id=props.match.params.id
-      Axios.get(url+id)
-        .then((res) => {
-          console.log(res.data)
-          setVendorData(res.data)
-      }).catch(err=>console.error(err))
-  }, [id]);
-
-    const handleUpdate = (e)=> {
-      e.preventDefault()
-      // const id= props.match.params.id
-      Axios.put(url+id,vendorData)
-         .then((response) => {
-          console.log(response);
-          if(response.status === 200) {
-            history.push("/dashboard/vendors")
-            enqueueSnackbar('Succesfully Updated', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } ); 
-            setTimeout(() => {
-              window.location.reload();
-            }, 2000); 
-          }
-        }, (error) => {
-          enqueueSnackbar('Check Data and Try Again', { variant:'Error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
-          console.log(error);
-      });
-  }
   const handleChange=(e)=>{
-      const newdata={...vendorData}
-      newdata[e.target.id]=e.target.value
-      setVendorData(newdata)
+    const newdata={...vendorData}
+    newdata[e.target.id]=e.target.value
+    setVendorData(newdata)
+}
+
+  const handleSave=(e)=>{
+    e.preventDefault();
+    Axios.post(url,vendorData) 
+    .then((response) => {
+        console.log(response); 
+        enqueueSnackbar('Succesfully Updated', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
+        history.push("/dashboard/vendors")
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000); 
+      }, (error) => {
+        console.log(error);
+        enqueueSnackbar('Check values and Try Again', { variant:'Error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
+    });
   }
-    return(
-        <Page title="Vendors | Update">
-            <Container maxWidth="xl">
-                <Box
-                    component="form"
-                    sx={{ paddingRight: 3, paddingLeft: 3 }}
-                    noValidate
-                    autoComplete="off"
-                    >
-                    <Stack spacing={5}>
-            <Typography sx={{ paddingTop: 3, paddingLeft:3 }} variant="h4">Update Vendor {id}</Typography>
+  return (
+    <Page title="Vendors | Add">
+      <Container maxWidth="xl">
+      <Box
+          component="form"
+          sx={{ paddingRight: 3, paddingLeft: 3 }}
+          noValidate
+          autoComplete="off"
+        >
+          <Stack spacing={5}>
+            <Typography sx={{ paddingTop: 3, paddingLeft:3 }} variant="h4">Add Vendors</Typography>
             <Grid container spacing={3} sx={{ pr: 5 }}>
               <Grid item xs={12} md={6} xl={6}>
                 <TextField
@@ -211,19 +205,19 @@ const VUpdate=(props) =>{
         </Box>
         <Divider sx={{ mt: 5, mb: 5 }} />
         <Box display="flex" justifyContent="center" alignItems="center">
-          <Button variant="contained" size="large" onClick={handleUpdate} sx={{ maxWidth: 0.5 }}>
-            UPDATE
+          <Button variant="contained" size="large" onClick={handleSave} sx={{ maxWidth: 0.5 }}>
+            SAVE
           </Button>
         </Box>
-    </Container>
-        </Page>
-    )
-}
+      </Container>
+    </Page>
+  );
+};
 
 export default function IntegrationNotistack() {
   return (
     <SnackbarProvider maxSnack={5}>
-      <VUpdate />
+      <VAdd />
     </SnackbarProvider>
   );
 }

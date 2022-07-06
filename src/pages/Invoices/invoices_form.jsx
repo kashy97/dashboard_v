@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import Page from "../components/Page";
+import Page from "../../components/Page";
 import Axios from "axios";
 import { SnackbarProvider,useSnackbar } from 'notistack';
 
@@ -25,13 +25,12 @@ const IAdd = () => {
     net_amount:0,
   }]);
   const [senderRef, setSenderRef] = useState('');
-  const [net,setNet] =useState(0);
+  const [net,setNet] =useState([]);
   const [gst_amount, setGst_amount] = useState(0);
-  const [gstAmount, setGstAmount] = useState(0);
+  const [gstAmount, setGstAmount] = useState([]);
   const [vendors, setVendors] =useState([]);
   const [totalGross,setTotalGross]=useState(0);
   const [totalGst,setTotalGst]=useState(0);
-  const [gst_total,setGst_total]= useState(0);
   const [branches, setBranches] =useState([]);
   const [idofvendor,setIdofvendor]=useState(0);
   const [idofbranch,setIdofbranch]=useState(0);
@@ -50,16 +49,11 @@ const IAdd = () => {
     ))
   },[branches])
   
-  // useEffect(()=>{
-  //   const list=[...itemList]
-  //   for(let i=0;i<noOfItems;i++){
-  //     const percent = list[i].gst / 100;
-  //     const total= list[i].unit_price* list[i].quantity;
-  //     setGst_total(Math.round(total*percent));
-  //     setGstAmount(gst_total)
-  //     setNet(list[i].net_amount)
-  //   }
-  // }, [gst_total, itemList, net, noOfItems])
+  useEffect(()=>{
+    setTotalGst(gstAmount.reduce((a,b)=>a=a+b,0))
+    setTotalGross(net.reduce((p,q)=>p=p+q,0))
+  },[gstAmount, noOfItems, net])
+  
   useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/vendor',{
     }).then((response) => {
@@ -131,7 +125,9 @@ const handleItemChange=(e,index)=>{
   const percent = list[index].gst / 100;
   const total = list[index].quantity * list[index].unit_price;
   setGst_amount(Math.round(total * percent));
+  gstAmount[index]=gst_amount;
   list[index].net_amount=gst_amount + total;
+  net[index]=list[index].net_amount;
   setItemList(list);
 };
 
@@ -232,6 +228,7 @@ const handleItemChange=(e,index)=>{
                   name="gst"
                   fullWidth
                   label="GST"
+                  type="number"
                   variant="outlined"
                   onClick={()=>gstClick(index)}
                   value={items.gst}
@@ -247,7 +244,6 @@ const handleItemChange=(e,index)=>{
                   variant="outlined"
                   // onClick={()=>setSearch_index(index)}
                   value={items.net_amount}
-                  onChange={(e)=>handleItemChange(e,index)}
                   disabled
                 /></Grid>
                 {itemList.length!==1 && (

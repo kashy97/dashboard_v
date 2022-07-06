@@ -8,12 +8,15 @@ import Login from "./auth/login";
 import DashBoard from "./pages/dashboard";
 import Profile from "./pages/profile";
 import Team from "./pages/team";
-import IAdd from "./pages/invoices_form";
-import Orders from "./pages/invoices";
-import Vendors from "./pages/vendors";
-import VAdd from "./pages/vendors_add";
-import VUpdate from "./pages/vendors_update";
-import IUpdate from "./pages/invoices_update";
+import IAdd from "./pages/Invoices/invoices_form";
+import Orders from "./pages/Invoices/invoices";
+import Vendors from "./pages/Vendors/vendors";
+import VAdd from "./pages/Vendors/vendors_add";
+import VUpdate from "./pages/Vendors/vendors_update";
+import Branches from "./pages/Branches/branches";
+import BAdd from "./pages/Branches/branches_add";
+import BUpdate from "./pages/Branches/branches_update";
+import IUpdate from "./pages/Invoices/invoices_update";
 import ROrders from "./pages/release_orders";
 import Register from "./auth/register";
 import RequireAuth from "./routes/RequireAuth";
@@ -74,6 +77,30 @@ export default function Router() {
           element: (
             <RequireAuth>
                 <VUpdate />
+            </RequireAuth>
+          ),
+        },
+        {
+          path: "branches",
+          element: (
+            <RequireAuth>
+              <Branches />
+            </RequireAuth>
+          ),
+        },
+        {
+          path: "branches/add",
+          element: (
+            <RequireAuth>
+              <BAdd />
+            </RequireAuth>
+          ),
+        },
+        {
+          path: "branches/update/:id",
+          element: (
+            <RequireAuth>
+                <BUpdate />
             </RequireAuth>
           ),
         },

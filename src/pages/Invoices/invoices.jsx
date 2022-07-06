@@ -3,7 +3,7 @@ import { SnackbarProvider,useSnackbar } from "notistack";
 import React from "react";
 import {createBrowserHistory} from 'history';
 import axios from "axios";
-import Page from "../components/Page";
+import Page from "../../components/Page";
 
 const Orders = (props) => {
   const enqueueSnackbar = useSnackbar();

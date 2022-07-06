@@ -1,6 +1,6 @@
 import { Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
 import React from "react";
-import Page from "../components/Page";
+import Page from "../../components/Page";
 import axios from "axios";
 import {createBrowserHistory} from 'history';
 import { SnackbarProvider,useSnackbar } from 'notistack';
