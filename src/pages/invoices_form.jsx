@@ -34,7 +34,7 @@ const IAdd = () => {
   const [idofvendor,setIdofvendor]=useState(0);
   const [idofbranch,setIdofbranch]=useState(0);
   const [noOfItems,setNoOfItems]=useState(1);
-  const [search_index, setSearch_index]= useState(0);
+  // const [search_index, setSearch_index]= useState(0);
 
   useEffect(()=>{
     vendors.map((v) =>(
@@ -99,11 +99,6 @@ const IAdd = () => {
     });
   }
 
-  const handleItemChange=(e,index)=>{
-    const list =[...itemList];
-    list[index][e.target.name]=e.target.value;
-    setItemList(list);
-};
 
 const handleItemRemove= (index) => {
     setNoOfItems(noOfItems-1)
@@ -128,29 +123,39 @@ const handleItemAdd = () => {
   }]);
 };
 
-  // const qtClick = (e,index) => {
-  //   const list =[...itemList];
-  //   if(list[index][e.target.value]===0)
-  //     list[index][e.target.value]="";
-  // }
-  // const priceClick = (e,index) => {
-  //   const list =[...itemList];
-  //   if(list[index][e.target.value]===0)
-  //     list[index][e.target.value]="";
-  // }
-  // const gstClick = (e,index) => {
-  //   const list =[...itemList];
-  //   if(list[index][e.target.value]===0)
-  //     list[index][e.target.value]="";
-  // }
+const handleItemChange=(e,index)=>{
+  const list =[...itemList];
+  list[index][e.target.name]=e.target.value;
+  const percent = list[index].gst / 100;
+  const total = list[index].quantity * list[index].unit_price;
+  setGst_amount(Math.round(total * percent));
+  list[index].net_amount=gst_amount + total;
+  setItemList(list);
+};
 
-  useEffect(() => {
-    let list = [...itemList];
-    const percent = list[search_index].gst / 100;
-    const total = list[search_index].quantity * list[search_index].unit_price;
-    setGst_amount(Math.round(total * percent));
-    list[search_index].net_amount=gst_amount + total;
-  }, [gst_amount, itemList, search_index]);
+  const qtClick = (e,index) => {
+    const list =[...itemList];
+    if(list[index][e.target.value]===0)
+      list[index][e.target.value]="";
+  }
+  const priceClick = (e,index) => {
+    const list =[...itemList];
+    if(list[index][e.target.value]===0)
+      list[index][e.target.value]="";
+  }
+  const gstClick = (e,index) => {
+    const list =[...itemList];
+    if(list[index][e.target.value]===0)
+      list[index][e.target.value]="";
+  }
+
+  // useEffect(() => {
+  //   let list = [...itemList];
+  //   const percent = list[search_index].gst / 100;
+  //   const total = list[search_index].quantity * list[search_index].unit_price;
+  //   setGst_amount(Math.round(total * percent));
+  //   list[search_index].net_amount=gst_amount + total;
+  // }, [gst_amount, itemList, search_index]);
 
   return (
     <Page title="Invoices | Add">
@@ -191,7 +196,7 @@ const handleItemAdd = () => {
                     id="title"
                     name="title"
                     label="Title"
-                    onClick={()=>setSearch_index(index)}
+                    // onClick={()=>setSearch_index(index)}
                     type="text"
                     value={items.title}
                     onChange={(e)=>handleItemChange(e,index)}
@@ -205,7 +210,7 @@ const handleItemAdd = () => {
                   label="Price"
                   type="number"
                   variant="outlined"
-                  onClick={()=>setSearch_index(index)}
+                  onClick={()=>priceClick(index)}
                   value={items.unit_price}
                   onChange={(e)=>handleItemChange(e,index)}
                 /></Grid>
@@ -216,7 +221,7 @@ const handleItemAdd = () => {
                   label="Quantity"
                   type="number"
                   variant="outlined"
-                  onClick={()=>setSearch_index(index)}
+                  onClick={()=>qtClick(index)}
                   value={items.quantity}
                   onChange={(e)=>handleItemChange(e,index)}
                 /></Grid>
@@ -226,7 +231,7 @@ const handleItemAdd = () => {
                   fullWidth
                   label="GST"
                   variant="outlined"
-                  onClick={()=>setSearch_index(index)}
+                  onClick={()=>gstClick(index)}
                   value={items.gst}
                   onChange={(e)=>handleItemChange(e,index)}
                 >
@@ -238,7 +243,7 @@ const handleItemAdd = () => {
                   label="Gross Amount"
                   type="number"
                   variant="outlined"
-                  onClick={()=>setSearch_index(index)}
+                  // onClick={()=>setSearch_index(index)}
                   value={items.net_amount}
                   onChange={(e)=>handleItemChange(e,index)}
                   disabled

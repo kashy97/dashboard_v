@@ -18,6 +18,7 @@ import ROrders from "./pages/release_orders";
 import Register from "./auth/register";
 import RequireAuth from "./routes/RequireAuth";
 import ForgotPassword from "./auth/forgotpassword";
+import Edition from "./pages/edition";
 // import NotFound from "./pages/Page404";
 
 // ----------------------------------------------------------------------
@@ -105,6 +106,14 @@ export default function Router() {
           element: (
             <RequireAuth>
               <ROrders />
+            </RequireAuth>
+          ),
+        },
+        {
+          path: "edition",
+          element: (
+            <RequireAuth>
+              <Edition />
             </RequireAuth>
           ),
         },

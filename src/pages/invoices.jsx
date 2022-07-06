@@ -26,25 +26,26 @@ const Orders = (props) => {
   React.useEffect(() => {
     console.log("fetched");
     axios.get(url).then((res) => {
-      // res.json()
+      console.log(res.data)
       setPoData(res.data)
     });
   }, []);
 
-  // console.log(poData);
   const deleteVendor = (id) => {
     if(window.confirm("Are you sure you want to delete")){
     axios.delete(`${url}/${id}`).then(()=>{
         // console.log("deleted",res)
         enqueueSnackbar('Successfully deleted' , { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
-        window.location.reload(false)
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000); 
       }).catch (err => console.log(err))
   }}
 
   const updateVendor = (id) => {
     // console.log(id) 
     history.push(`/dashboard/invoices/update/${id}`)
-    window.location.reload(false)
+    window.location.reload();
   }
 
   return (
