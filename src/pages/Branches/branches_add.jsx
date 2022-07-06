@@ -22,7 +22,7 @@ const BAdd = () => {
   const [branchData,setBranchData]= useState({
     name:"",
     email:"",
-    zipcode:"",
+    pincode:"",
     phone:"",
     address1:"",
     address2:"",
@@ -167,10 +167,10 @@ const BAdd = () => {
               <Grid item xs={12} md={6} xl={6}>
                 <TextField
                   fullWidth
-                  id="zipcode"
-                  label="Zip Code"
-                  type="number"
-                  value={branchData.zipcode}
+                  id="pincode"
+                  label="Pin Code"
+                  type="text"
+                  value={branchData.pincode}
                   onChange={(e) => handleChange(e)}
                   variant="outlined"
                 />

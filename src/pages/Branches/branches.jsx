@@ -24,16 +24,16 @@ const Branches = (props) => {
       axios.delete(`${url}/${id}`).then(()=> {
           // console.log("deleted",res)
           enqueueSnackbar('Successfully deleted' , { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
-          window.location.reload(false)
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000); 
       })
   }}
 
   const updateVendor = (id) => {
     // console.log(id) 
     history.push(`/dashboard/branches/update/${id}`)
-    setTimeout(() => {
-      window.location.reload();
-    }, 2000); 
+    window.location.reload();
   }
   
   return (
@@ -82,7 +82,7 @@ const Branches = (props) => {
                   Address
                 </Typography>
                 <Typography noWrap variant="body2">
-                {b.address1},{b.address2},{b.city},{b.state},{b.country}-{b.zipcode}
+                {b.address1},{b.address2},{b.city},{b.state},{b.country}-{b.pincode}
                 </Typography>
               </CardContent>
               <CardActions sx={{justifyContent:'center'}}>
