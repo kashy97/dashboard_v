@@ -2,7 +2,7 @@ import * as Yup from "yup";
 import { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useFormik, Form, FormikProvider } from "formik";
-import { useLocation } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 // material
 import {
   Link,
@@ -14,15 +14,20 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import useAuth from "../../hooks/useAuth";
+// import useAuth from "../../hooks/useAuth";
 // component
+import { SnackbarProvider,useSnackbar } from 'notistack';
 import Iconify from "../../components/Iconify";
+import axios from "axios";
+import { createBrowserHistory } from "history";
 // ----------------------------------------------------------------------
 
-export default function LoginForm() {
-  const navigate = useNavigate();
-  const { login } = useAuth();
-  const { state } = useLocation();
+const LoginForm= ()=> {
+  const {enqueueSnackbar} = useSnackbar();
+  // const navigate = useNavigate();
+  // const { login } = useAuth();
+  const history= createBrowserHistory();
+  // const { state } = useLocation();
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -32,20 +37,59 @@ export default function LoginForm() {
     password: Yup.string().required("Password is required"),
   });
 
+  const initialValues = {
+    email: "",
+    password: "",
+    remember: true,
+  }
+  // const formik = useFormik({
+  //   initialValues: {
+  //     email: "",
+  //     password: "",
+  //     remember: true,
+  //   },
+  //   validationSchema: LoginSchema,
+  //   onSubmit: () => {
+  //     login().then(() => {
+  //       navigate(state?.path || "/dashboard/homepage", { replace: true });
+  //       console.log(state);
+  //     });
+  //   },
+  // });
+
+  const handleCheck = (data) => {
+
+    console.log(data)
+    console.log(JSON.stringify(data,null,2))
+     axios.post("https://poorvikadashboard.herokuapp.com/api/v1/login/", {
+        email: data.email,
+        password: data.password,
+     }).then((response)=> {
+                // const { token } = response.data.token;
+                // localStorage.setItem('access_token',response.data.token.access);
+                localStorage.setItem('refresh_token',response.data.token.refresh);
+                const send=localStorage.getItem('refresh_token');
+                // dispatch({
+                //     type: STORE_USER,
+                //     payload: response.data
+                // })
+            console.log(response.data.token);
+         if(!send){
+            enqueueSnackbar('Invalid User' , { variant:'error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } ); 
+          } else{
+            enqueueSnackbar('Succesful Login', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} }); 
+            history.push("/dashboard/homepage")
+            window.location.reload();
+            // navigate("/dashboard/homepage", { replace: true });    
+          }
+        })
+  }
+
   const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-      remember: true,
-    },
+    initialValues: initialValues,
     validationSchema: LoginSchema,
-    onSubmit: () => {
-      login().then(() => {
-        navigate(state?.path || "/dashboard/homepage", { replace: true });
-        console.log(state);
-      });
-    },
-  });
+    onSubmit: handleCheck,
+    });
 
   const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } =
     formik;
@@ -127,5 +171,12 @@ export default function LoginForm() {
         </LoadingButton>
       </Form>
     </FormikProvider>
+  );
+}
+export default function IntegrationNotistack() {
+  return (
+    <SnackbarProvider maxSnack={5}>
+      <LoginForm />
+    </SnackbarProvider>
   );
 }

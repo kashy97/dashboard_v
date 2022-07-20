@@ -16,6 +16,7 @@ import Iconify from "../../components/Iconify";
 import MenuPopover from "../../components/MenuPopover";
 //
 import account from "../../_mocks_/account";
+import { createBrowserHistory } from "history";
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +37,7 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const anchorRef = useRef(null);
+  const history= createBrowserHistory();
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -44,6 +46,12 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("refresh_token");
+    history.push("/login")
+    window.location.reload();
+  }
 
   return (
     <>
@@ -109,7 +117,7 @@ export default function AccountPopover() {
         ))}
 
         <Box sx={{ p: 2, pt: 1.5 }}>
-          <Button fullWidth color="inherit" variant="outlined" href="/login">
+          <Button fullWidth color="inherit" variant="outlined" onClick={handleLogout}>
             Logout
           </Button>
         </Box>
