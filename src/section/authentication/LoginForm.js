@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 import { useState } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { useFormik, Form, FormikProvider } from "formik";
 // import { useLocation } from "react-router-dom";
 // material
@@ -14,7 +14,7 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-// import useAuth from "../../hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
 // component
 import { SnackbarProvider,useSnackbar } from 'notistack';
 import Iconify from "../../components/Iconify";
@@ -25,7 +25,7 @@ import { createBrowserHistory } from "history";
 const LoginForm= ()=> {
   const {enqueueSnackbar} = useSnackbar();
   // const navigate = useNavigate();
-  // const { login } = useAuth();
+  const { login } = useAuth();
   const history= createBrowserHistory();
   // const { state } = useLocation();
   const [showPassword, setShowPassword] = useState(false);
@@ -65,6 +65,7 @@ const LoginForm= ()=> {
         email: data.email,
         password: data.password,
      }).then((response)=> {
+                login()
                 // const { token } = response.data.token;
                 // localStorage.setItem('access_token',response.data.token.access);
                 localStorage.setItem('refresh_token',response.data.token.refresh);
@@ -79,8 +80,11 @@ const LoginForm= ()=> {
           } else{
             enqueueSnackbar('Succesful Login', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} }); 
             history.push("/dashboard/homepage")
-            window.location.reload();
+            setTimeout(() => {
+              window.location.reload();
+            },2000);
             // navigate("/dashboard/homepage", { replace: true });    
+
           }
         })
   }

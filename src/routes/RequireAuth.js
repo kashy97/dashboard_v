@@ -1,20 +1,14 @@
 import { Navigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { Route } from "react-router-dom";
-// import useAuth from "../hooks/useAuth";
+import useAuth from "../hooks/useAuth";
+import { Outlet } from "react-router-dom";
 
-const RequireAuth = (children, ...rest) => {
-  // const { authed } = useAuth();
-  const access =localStorage.getItem('refresh_token');
+const RequireAuth = (props) => {
+  const { authed } = useAuth();
   const location = useLocation();
 
   return (
-  <Route {...rest}>
-  {access 
-  ? children 
-  : 
-  <Navigate to="/login" replace state={{ path: location.pathname }}/>}
-  </Route>
+  authed ? < Outlet/> : <Navigate to="/login" replace state={{ path: location.pathname }}/>
 )}
 
 export default RequireAuth;
