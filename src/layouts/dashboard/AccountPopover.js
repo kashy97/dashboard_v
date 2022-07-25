@@ -12,7 +12,7 @@ import {
   IconButton,
 } from "@mui/material";
 // components
-import useAuth from "../../hooks/useAuth";
+// import useAuth from "../../hooks/useAuth";
 import Iconify from "../../components/Iconify";
 import MenuPopover from "../../components/MenuPopover";
 //
@@ -37,7 +37,6 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
-  const {logout} =useAuth();
   const anchorRef = useRef(null);
   const history= createBrowserHistory();
   const [open, setOpen] = useState(false);
@@ -50,7 +49,7 @@ export default function AccountPopover() {
   };
 
   const handleLogout = () => {
-    logout()
+    localStorage.removeItem("access_token");
     history.push("/login")
     window.location.reload();
   }

@@ -67,9 +67,9 @@ const LoginForm= ()=> {
      }).then((response)=> {
                 login()
                 // const { token } = response.data.token;
-                // localStorage.setItem('access_token',response.data.token.access);
-                localStorage.setItem('refresh_token',response.data.token.refresh);
-                const send=localStorage.getItem('refresh_token');
+                localStorage.setItem('access_token',response.data.token.access);
+                // localStorage.setItem('refresh_token',response.data.token.refresh);
+                const send=localStorage.getItem('access_token');
                 // dispatch({
                 //     type: STORE_USER,
                 //     payload: response.data

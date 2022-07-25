@@ -8,14 +8,14 @@ function useAuth() {
     authed,
     login() {
       return new Promise((res) => {
-        localStorage.getItem("refresh_token");
+        localStorage.getItem("access_token");
         setAuthed(true);
         res();
       });
     },
     logout() {
       return new Promise((res) => {
-        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("access_token");
         setAuthed(false);
         res();
       });

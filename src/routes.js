@@ -32,117 +32,120 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         {
-          path: "homepage",
-          element: (
-            <RequireAuth>
-              <DashBoard />
-            </RequireAuth>
-          ),
-        },
-        {
-          path: "profile",
-          element: (
-            // <RequireAuth>
-              <Profile />
-            // </RequireAuth>
-          ),
-        },
-        {
-          path: "profile/edit",
-          element: (
-            // <RequireAuth>
-              <Team />
-            // </RequireAuth>
-          ),
-        },
-        {
-          path: "vendors",
-          element: (
-            // <RequireAuth>
-              <Vendors />
-            // </RequireAuth>
-          ),
-        },
-        {
-          path: "vendors/add",
-          element: (
-            // <RequireAuth>
-              <VAdd />
-            // </RequireAuth>
-          ),
-        },
-        {
-          path: "vendors/update/:id",
-          element: (
-            // <RequireAuth>
-                <VUpdate />
-            // </RequireAuth>
-          ),
-        },
-        {
-          path: "branches",
-          element: (
-            // <RequireAuth>
-              <Branches />
-            // </RequireAuth>
-          ),
-        },
-        {
-          path: "branches/add",
-          element: (
-            // <RequireAuth>
-              <BAdd />
-            // </RequireAuth>
-          ),
-        },
-        {
-          path: "branches/update/:id",
-          element: (
-            // <RequireAuth>
-                <BUpdate />
-            // </RequireAuth>
-          ),
-        },
-        {
-          path: "invoices",
-          element: (
-            // <RequireAuth>
-              <Orders />
-            // </RequireAuth>
-          ),
-        },
-        {
-          path: "invoices/add",
-          element: (
-            // <RequireAuth>
-              <IAdd />
-            // </RequireAuth>
-          ),
-        },
-        {
-          path: "invoices/update/:id",
-          element: (
-            // <RequireAuth>
-                <IUpdate />
-            // </RequireAuth>
-          ),
-        },
-        {
-          path: "release_orders",
-          element: (
-            // <RequireAuth>
-              <ROrders />
-            // </RequireAuth>
-          ),
-        },
-        {
-          path: "edition",
-          element: (
-            // <RequireAuth>
-              <Edition />
-            // </RequireAuth>
-          ),
-        },
+          element:<RequireAuth />,
+          children:[
+            {
+              path: "homepage",
+              element: (
+                  <DashBoard />
+              ),
+            },
+            {
+              path: "profile",
+              element: (
+                // <RequireAuth>
+                  <Profile />
+                // </RequireAuth>
+              ),
+            },
+            {
+              path: "profile/edit",
+              element: (
+                // <RequireAuth>
+                  <Team />
+                // </RequireAuth>
+              ),
+            },
+            {
+              path: "vendors",
+              element: (
+                // <RequireAuth>
+                  <Vendors />
+                // </RequireAuth>
+              ),
+            },
+            {
+              path: "vendors/add",
+              element: (
+                // <RequireAuth>
+                  <VAdd />
+                // </RequireAuth>
+              ),
+            },
+            {
+              path: "vendors/update/:id",
+              element: (
+                // <RequireAuth>
+                    <VUpdate />
+                // </RequireAuth>
+              ),
+            },
+            {
+              path: "branches",
+              element: (
+                // <RequireAuth>
+                  <Branches />
+                // </RequireAuth>
+              ),
+            },
+            {
+              path: "branches/add",
+              element: (
+                // <RequireAuth>
+                  <BAdd />
+                // </RequireAuth>
+              ),
+            },
+            {
+              path: "branches/update/:id",
+              element: (
+                // <RequireAuth>
+                    <BUpdate />
+                // </RequireAuth>
+              ),
+            },
+            {
+              path: "invoices",
+              element: (
+                // <RequireAuth>
+                  <Orders />
+                // </RequireAuth>
+              ),
+            },
+            {
+              path: "invoices/add",
+              element: (
+                // <RequireAuth>
+                  <IAdd />
+                // </RequireAuth>
+              ),
+            },
+            {
+              path: "invoices/update/:id",
+              element: (
+                // <RequireAuth>
+                    <IUpdate />
+                // </RequireAuth>
+              ),
+            },
+            {
+              path: "release_orders",
+              element: (
+                // <RequireAuth>
+                  <ROrders />
+                // </RequireAuth>
+              ),
+            },
+            {
+              path: "edition",
+              element: (
+                // <RequireAuth>
+                  <Edition />
+                // </RequireAuth>
+              ),
+            },
+          ],
+        }
       ],
     },
     {
