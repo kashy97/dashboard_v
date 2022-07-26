@@ -21,6 +21,7 @@ import Register from "./auth/register";
 import RequireAuth from "./routes/RequireAuth";
 import ForgotPassword from "./auth/forgotpassword";
 import Edition from "./pages/edition";
+import Page404 from "./pages/404";
 // import NotFound from "./pages/Page404";
 
 // ----------------------------------------------------------------------
@@ -36,113 +37,59 @@ export default function Router() {
           children:[
             {
               path: "homepage",
-              element: (
-                  <DashBoard />
-              ),
+              element: <DashBoard />,
             },
             {
               path: "profile",
-              element: (
-                // <RequireAuth>
-                  <Profile />
-                // </RequireAuth>
-              ),
+              element: <Profile />,
             },
             {
               path: "profile/edit",
-              element: (
-                // <RequireAuth>
-                  <Team />
-                // </RequireAuth>
-              ),
+              element: <Team />,
             },
             {
               path: "vendors",
-              element: (
-                // <RequireAuth>
-                  <Vendors />
-                // </RequireAuth>
-              ),
+              element: <Vendors />,
             },
             {
               path: "vendors/add",
-              element: (
-                // <RequireAuth>
-                  <VAdd />
-                // </RequireAuth>
-              ),
+              element: <VAdd />,
             },
             {
               path: "vendors/update/:id",
-              element: (
-                // <RequireAuth>
-                    <VUpdate />
-                // </RequireAuth>
-              ),
+              element: <VUpdate />,
             },
             {
               path: "branches",
-              element: (
-                // <RequireAuth>
-                  <Branches />
-                // </RequireAuth>
-              ),
+              element: <Branches />,
             },
             {
               path: "branches/add",
-              element: (
-                // <RequireAuth>
-                  <BAdd />
-                // </RequireAuth>
-              ),
+              element: <BAdd />,
             },
             {
               path: "branches/update/:id",
-              element: (
-                // <RequireAuth>
-                    <BUpdate />
-                // </RequireAuth>
-              ),
+              element: <BUpdate />,
             },
             {
               path: "invoices",
-              element: (
-                // <RequireAuth>
-                  <Orders />
-                // </RequireAuth>
-              ),
+              element: <Orders />,
             },
             {
               path: "invoices/add",
-              element: (
-                // <RequireAuth>
-                  <IAdd />
-                // </RequireAuth>
-              ),
+              element: <IAdd />,
             },
             {
               path: "invoices/update/:id",
-              element: (
-                // <RequireAuth>
-                    <IUpdate />
-                // </RequireAuth>
-              ),
+              element: <IUpdate />,
             },
             {
               path: "release_orders",
-              element: (
-                // <RequireAuth>
-                  <ROrders />
-                // </RequireAuth>
-              ),
+              element: <ROrders />,
             },
             {
               path: "edition",
-              element: (
-                // <RequireAuth>
-                  <Edition />
-                // </RequireAuth>
-              ),
+              element: <Edition />,
             },
           ],
         }
@@ -157,9 +104,9 @@ export default function Router() {
         { path: "/register", element: <Register /> },
         { path: "/forgot_password", element: <ForgotPassword/>},
         // { path: "404", element: <NotFound /> },
-        // { path: "*", element: <Navigate to="/404" /> },
+        { path: "*", element: <Page404 /> },
       ],
     },
-    // { path: "*", element: <Navigate to="/404" replace /> },
+    { path: "*", element: <Page404 /> },
   ]);
 }

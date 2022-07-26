@@ -259,22 +259,22 @@ useEffect(()=> {
                 </TextField></Grid>
                 <Grid item xs={6} md={6} xl={4}><TextField
                   fullWidth
-                  id="gross"
-                  name="gross"
-                  label="Gross Amount"
-                  type="number"
-                  variant="outlined"
-                  value={items.net_amount}
-                  disabled
-                /></Grid>
-                <Grid item xs={6} md={6} xl={4}><TextField
-                  fullWidth
                   id="gstamount"
                   name="gstamount"
                   label="GST Amount"
                   type="number"
                   variant="outlined"
                   value={items.gst_amount}
+                  disabled
+                /></Grid>
+                <Grid item xs={6} md={6} xl={4}><TextField
+                  fullWidth
+                  id="gross"
+                  name="gross"
+                  label="Gross Amount"
+                  type="number"
+                  variant="outlined"
+                  value={items.net_amount}
                   disabled
                 /></Grid>
                 {itemList.items.length!==1 && (
