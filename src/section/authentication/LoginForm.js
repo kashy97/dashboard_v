@@ -14,7 +14,7 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import useAuth from "../../hooks/useAuth";
+// import useAuth from "../../hooks/useAuth";
 // component
 import { SnackbarProvider,useSnackbar } from 'notistack';
 import Iconify from "../../components/Iconify";
@@ -25,7 +25,7 @@ import { createBrowserHistory } from "history";
 const LoginForm= ()=> {
   const {enqueueSnackbar} = useSnackbar();
   // const navigate = useNavigate();
-  const { login } = useAuth();
+  // const { login } = useAuth();
   const history= createBrowserHistory();
   // const { state } = useLocation();
   const [showPassword, setShowPassword] = useState(false);
@@ -36,7 +36,7 @@ const LoginForm= ()=> {
       .required("Email is required"),
     password: Yup.string().required("Password is required"),
   });
-
+  
   const initialValues = {
     email: "",
     password: "",
@@ -65,7 +65,6 @@ const LoginForm= ()=> {
         email: data.email,
         password: data.password,
      }).then((response)=> {
-                login()
                 // const { token } = response.data.token;
                 localStorage.setItem('access_token',response.data.token.access);
                 // localStorage.setItem('refresh_token',response.data.token.refresh);
@@ -74,8 +73,8 @@ const LoginForm= ()=> {
                 //     type: STORE_USER,
                 //     payload: response.data
                 // })
-            console.log(response.data.token);
-         if(!send){
+            // console.log(response.data.status);
+         if(!send && response.status===404){
             enqueueSnackbar('Invalid User' , { variant:'error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } ); 
           } else{
             enqueueSnackbar('Succesful Login', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} }); 

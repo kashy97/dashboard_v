@@ -18,7 +18,6 @@ import MenuPopover from "../../components/MenuPopover";
 //
 import account from "../../_mocks_/account";
 import { createBrowserHistory } from "history";
-
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
@@ -36,7 +35,7 @@ const MENU_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function AccountPopover() {
+export default function AccountPopover(props) {
   const anchorRef = useRef(null);
   const history= createBrowserHistory();
   const [open, setOpen] = useState(false);

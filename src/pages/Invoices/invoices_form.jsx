@@ -32,8 +32,6 @@ const IAdd = () => {
   const [net,setNet] =useState(0);
   const [gstAmount, setGstAmount] = useState([]);
   const [vendors, setVendors] =useState([]);
-  // const [totalGross,setTotalGross]=useState(0);
-  // const [totalGst,setTotalGst]=useState(0);
   const [branches, setBranches] =useState([]);
   const [idofvendor,setIdofvendor]=useState(0);
   const [idofbranch,setIdofbranch]=useState(0);
@@ -104,20 +102,20 @@ const IAdd = () => {
         }
     }
     newTotal()
-    const newGST =()=> {
-        var arr1 = document.getElementsByName("gstamount");
-        var newgst = 0;
-        for(var i = 0; i < arr1.length; i++) {
-            if(arr1[i].value) {
-                newgst += +arr1[i].value;
-            }
-            setGstAmount(newgst)
-        }
-    }
-    newGST()
-
-
 }, [itemList])
+  useEffect(() => {
+    const newGST =()=> {
+      var arr1 = document.getElementsByName("gstamount");
+      var newgst = 0;
+      for(var i = 0; i < arr1.length; i++) {
+          if(arr1[i].value) {
+              newgst += +arr1[i].value;
+          }
+          setGstAmount(newgst)
+      }
+  }
+  newGST()
+  }, [itemList])
 
 const handleItemRemove= (index) => {
     const list=itemList.items;

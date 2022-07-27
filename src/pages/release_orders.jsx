@@ -53,7 +53,7 @@ const MenuProps = {
 const ROrders = () => {
 
   const {enqueueSnackbar} = useSnackbar();
-  const [ro_value, setRovalue] = React.useState(null);
+  const [ro_value, setRovalue] = React.useState([startOfDay(new Date())]);
   const [pub_value, setPubvalue] = React.useState([startOfDay(new Date())]);
   const [gross, setGross] = React.useState(0);
   const [gst, setGst] = React.useState(0);
@@ -231,16 +231,6 @@ const ROrders = () => {
               Release Order Entry form
             </Typography>
             <Grid container spacing={3} sx={{ pr: 5 }}>
-              {/* <Grid item xs={12} md={6} xl={6}>
-                <TextField
-                  fullWidth
-                  id="ro_number"
-                  label="Ro_Number"
-                  type="number"
-                  variant="outlined"
-                />
-              </Grid> */}
-
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <Grid item xs={12} md={6} xl={6}>
                   <DatePicker
@@ -257,30 +247,6 @@ const ROrders = () => {
                   />
                 </Grid>
               </LocalizationProvider>
-              <Grid item xs={12} md={6} xl={6}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                    label="Published Date"
-                    value={pub_value}
-                    inputFormat="yyyy-MM-dd"
-                    onChange={(newValue) => {
-                      const array = [...pub_value];
-                      const date = startOfDay(newValue);
-                      const index = findIndexDate(array, date);
-                      if (index >= 0) {
-                        array.splice(index, 1);
-                      } else {
-                        array.push(date);
-                      }
-                      setPubvalue(array);           
-                    }}
-                    renderDay={renderPickerDay}
-                    renderInput={(params) => (
-                      <TextField {...params} fullWidth />
-                    )}
-                  />
-                </LocalizationProvider>
-              </Grid>
               <Grid item xs={12} md={6} xl={6}>
                 <TextField
                   fullWidth
@@ -302,6 +268,21 @@ const ROrders = () => {
                   onChange={(e)=>setSize(e.target.value)}
                   variant="outlined"
                 />
+              </Grid>
+              <Grid item xs={12} md={6} xl={6}>
+                <TextField
+                  fullWidth
+                  id="vendor"
+                  label="Vendor Name"
+                  select
+                  variant="outlined"
+                >
+                  {vendors.map((option) => (
+                    <MenuItem value={option.name}>
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Grid>
               <Grid item xs={12} md={6} xl={6}>
               <InputLabel id="edition">Edition</InputLabel>
@@ -332,36 +313,33 @@ const ROrders = () => {
                 </Select>
               </Grid>
               <Grid item xs={12} md={6} xl={6}>
-                <TextField
-                  fullWidth
-                  id="vendor"
-                  label="Vendor Name"
-                  select
-                  variant="outlined"
-                >
-                  {vendors.map((option) => (
-                    <MenuItem value={option.name}>
-                      {option.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                </Grid>
+              <Grid item xs={12} md={6} xl={6}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    label="Published Date"
+                    value={pub_value}
+                    inputFormat="yyyy-MM-dd"
+                    onChange={(newValue) => {
+                      const array = [...pub_value];
+                      const date = startOfDay(newValue);
+                      const index = findIndexDate(array, date);
+                      if (index >= 0) {
+                        array.splice(index, 1);
+                      } else {
+                        array.push(date);
+                      }
+                      setPubvalue(array);           
+                    }}
+                    renderDay={renderPickerDay}
+                    renderInput={(params) => (
+                      <TextField {...params} fullWidth />
+                    )}
+                  />
+                </LocalizationProvider>
               </Grid>
-              {/* <Grid item xs={12} md={6} xl={6}>
-                <TextField
-                  fullWidth
-                  id="vendor_category"
-                  label="Vendor_Category"
-                  select
-                  onChange={handleChange}
-                  variant="outlined"
-                >
-                  {vendor_cat.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid> */}
+              <Grid item xs={12} md={6} xl={6}>
+                </Grid>
               <Grid item xs={12} md={6} xl={6}>
                 <TextField
                   fullWidth
