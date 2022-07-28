@@ -8,53 +8,44 @@ import {
   Typography,
   Container,
   Grid,
-  Select,
-  InputLabel,
-  OutlinedInput,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
+// import { styled } from "@mui/material/styles";
 import React from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import PickersDay from "@mui/lab/PickersDay";
+// import PickersDay from "@mui/lab/PickersDay";
 import startOfDay from "date-fns/startOfDay";
 import DatePicker from "@mui/lab/DatePicker";
 import Page from "../components/Page";
 import Axios from "axios";
 import { SnackbarProvider,useSnackbar } from 'notistack';
 
-const CustomPickersDay = styled(PickersDay, {
-  shouldForwardProp: (prop) => prop !== "selected"
-})(({ theme, selected }) => ({
-  ...(selected && {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.common.white,
-    "&:hover, &:focus": {
-      backgroundColor: theme.palette.primary.dark
-    },
-    borderTopLeftRadius: "50%",
-    borderBottomLeftRadius: "50%",
-    borderTopRightRadius: "50%",
-    borderBottomRightRadius: "50%"
-  })
-}));
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+// const CustomPickersDay = styled(PickersDay, {
+//   shouldForwardProp: (prop) => prop !== "selected"
+// })(({ theme, selected }) => ({
+//   ...(selected && {
+//     backgroundColor: theme.palette.primary.main,
+//     color: theme.palette.common.white,
+//     "&:hover, &:focus": {
+//       backgroundColor: theme.palette.primary.dark
+//     },
+//     borderTopLeftRadius: "50%",
+//     borderBottomLeftRadius: "50%",
+//     borderTopRightRadius: "50%",
+//     borderBottomRightRadius: "50%"
+//   })
+// }));
 
 const ROrders = () => {
 
   const {enqueueSnackbar} = useSnackbar();
   const [ro_value, setRovalue] = React.useState([startOfDay(new Date())]);
-  const [pub_value, setPubvalue] = React.useState([startOfDay(new Date())]);
+  const [pub_value, setPubvalue] = React.useState({ date:[
+    {
+      pub_date:null,
+    }
+  ]
+  });
   const [gross, setGross] = React.useState(0);
   const [gst, setGst] = React.useState(0);
   const [gsta, setGsta] = React.useState(0);
@@ -66,10 +57,17 @@ const ROrders = () => {
   const [branches, setBranches] = React.useState([]);
   const [idofvendor,setIdofvendor] = React.useState(0);
   const [idofbranch,setIdofbranch] = React.useState(0);
-  // const [idofedition,setIdofedition] = React.useState(0);
+  const [idofedition,setIdofedition] = React.useState(0);
   const [send_date,setSendDate] = React.useState("");
-  const [send_pubdate,setSendPubDate] = React.useState([]);
+  const [publication,setPublication]= React.useState([]);
   const [edition,setEdition] = React.useState([]);
+  const [editionCheck,setEditionCheck] = React.useState([]);
+  const [vendorValue,setVendorValue] = React.useState('');
+  const [editionValue,setEditionValue] = React.useState('');
+  const [branchValue,setBranchValue] = React.useState('');
+
+  const arrayUniqueByPubName = [...new Map(publication.map(item =>
+    [item["pub_name"], item])).values()];
 
   React.useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/vendor',{
@@ -81,7 +79,6 @@ const ROrders = () => {
           console.log(error);
       });
     },[])
-
   React.useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/Edition',{
     }).then((response) => {
@@ -96,25 +93,21 @@ const ROrders = () => {
   React.useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/branches',{
     }).then((response) => {
-          // console.log("vendor",response.data);
           const branches=response.data;
           setBranches(branches);
         }, (error) => {
           console.log(error);
       });
     },[])
-
     React.useEffect(()=>{
-      let list=[...pub_value];
-      for (let i=0;i<list.length;i++){
-        let newDate = new Date(pub_value[i])
-        let date = newDate.getDate();
-        let month = newDate.getMonth()+1;
-        let year = newDate.getFullYear();
-        let data= year+'-'+month+'-'+date;
-        setSendPubDate(...data)
-      }
-    },[pub_value, send_pubdate])
+      Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/Publication',{
+      }).then((response) => {
+            const publications=response.data;
+            setPublication(publications);
+          }, (error) => {
+            console.log(error);
+        });
+      },[])
 
     React.useEffect(()=>{
       let newDate = new Date(ro_value)
@@ -123,32 +116,26 @@ const ROrders = () => {
       let year = newDate.getFullYear();
       setSendDate(year+'-'+month+'-'+date)
     },[ro_value])
-  React.useEffect(()=>{
-    vendors.map((v)=>(
-      setIdofvendor(v.id)
-    ))
-  },[vendors])
 
-  // React.useEffect(()=>{
-  //   edition.map((e) => (
-  //     setIdofedition(e.id)
-  //   ))
-  // },[edition])
-  React.useEffect(()=>{
-    branches.map((b)=>(
-      setIdofbranch(b.id)
-    ))
-  },[branches])
+    React.useEffect(()=>{
+      vendors.map((v)=>(
+        vendorValue===v.name?
+        setIdofvendor(v.id):null
+      ))
+    },[vendorValue, vendors])
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setEdition(
-      typeof value === 'string' ? value.split(',') : value,
-    );
-    console.log("edition changed",edition);
-  };
+  React.useEffect(()=>{
+    edition.map((e) => (
+      editionValue===e.edition?
+      setIdofedition(e.id):null
+    ))
+  },[edition,editionValue])
+    React.useEffect(()=>{
+      branches.map((b)=>(
+        branchValue===b.name?
+        setIdofbranch(b.id):null
+      ))
+    },[branches,branchValue])
 
   const handleSubmit=(e) =>{
     e.preventDefault();
@@ -164,12 +151,10 @@ const ROrders = () => {
         gst_amount: gsta,
         net_amunt: net,
         billing_address: idofbranch,
-        edition: edition,
-        pub_date: [
-            {
-                pub_date: send_pubdate,
-            },
-        ],
+        edition: [{
+          edition: idofedition,
+        }],
+        pub_date: pub_value.date,
     }).then((response) => {
       enqueueSnackbar('Data Entry Successful', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
       console.log(response);
@@ -179,34 +164,51 @@ const ROrders = () => {
     });
   }
 
-  const findDate = (dates, date) => {
-    const dateTime = date.getTime();
-    return dates.find((item) => item.getTime() === dateTime);
-  };
+  // const findDate = (dates, date) => {
+  //   const dateTime = date.getTime();
+  //   return dates.find((item) => item.getTime() === dateTime);
+  // };
 
-  const findIndexDate = (dates, date) => {
-    const dateTime = date.getTime();
-    return dates.findIndex((item) => item.getTime() === dateTime);
-  };
+  // const findIndexDate = (dates, date) => {
+  //   const dateTime = date.getTime();
+  //   return dates.findIndex((item) => item.getTime() === dateTime);
+  // };
 
-  const renderPickerDay = (date, selectedDates, pickersDayProps) => {
-    if (!pub_value) {
-      return <PickersDay {...pickersDayProps} />;
-    }
+  // const renderPickerDay = (date, selectedDates, pickersDayProps) => {
+  //   if (!pub_value) {
+  //     return <PickersDay {...pickersDayProps} />;
+  //   }
 
-    const selected = findDate(pub_value, date);
+  //   const selected = findDate(pub_value, date);
 
-    return (
-      <CustomPickersDay
-        {...pickersDayProps}
-        disableMargin
-        selected={selected}
-      />
-    );
-  };
+  //   return (
+  //     <CustomPickersDay
+  //       {...pickersDayProps}
+  //       disableMargin
+  //       selected={selected}
+  //     />
+  //   );
+  // };
+
+  const handlePublication=(id)=>{
+    const pub = edition.filter(x => x.pub.id === id);
+    setEditionCheck(pub);
+  }
+  const handleItemRemove= (index) => {
+    const list=pub_value.date;
+    list.splice(index,1);
+    setPubvalue((prevState)=>({...prevState,list}));
+};
+
+const handleItemAdd = (e) => {
+    e.preventDefault()
+    setPubvalue((prevState)=>({...prevState, date:[...prevState.date, 
+    {
+      pub_date: null,
+  }]}));
+};
 
   React.useEffect(() => {
-    // code to run when state changes
     const percent = gst / 100;
     setGsta(Math.round(gross * percent));
     setNet(Number(gsta + gross));
@@ -221,7 +223,7 @@ const ROrders = () => {
     if(gross===0)
       setGross('')
   }
-  console.log("Dates",send_pubdate)
+
   return (
     <Page title="Release Order">
       <Container maxWidth="xl">
@@ -275,72 +277,112 @@ const ROrders = () => {
                   id="vendor"
                   label="Vendor Name"
                   select
+                  value={vendorValue}
+                  onChange={(e)=>setVendorValue(e.target.value)}
                   variant="outlined"
                 >
                   {vendors.map((option) => (
-                    <MenuItem value={option.name}>
+                    <MenuItem key={option.id} value={option.name}>
                       {option.name}
                     </MenuItem>
                   ))}
                 </TextField>
               </Grid>
+              <Grid item xs={12} md={6} xl={6}>   
+              <TextField
+                    fullWidth
+                    id="pub"
+                    label="Publication"
+                    select
+                    unique
+                    onChange={(e)=>handlePublication(e.target.value)}
+                    variant="outlined"
+                  >
+                    {arrayUniqueByPubName &&
+                    arrayUniqueByPubName !== undefined?
+                    arrayUniqueByPubName.map((option,index) => (
+                      <MenuItem key={index} value={option.id}>
+                        {option.pub_name}
+                      </MenuItem>
+                    ))
+                    :"No Publication"
+                    }
+                  </TextField>
+              </Grid>
               <Grid item xs={12} md={6} xl={6}>
-              <InputLabel id="edition">Edition</InputLabel>
-                <Select
+              <TextField
                   fullWidth
-                  labelId="edition"
                   id="edition"
-                  displayEmpty
-                  label="Edition" 
-                  value={edition}
-                  onChange={handleChange}
-                  multiple
-                  renderInput={(params) => (
-                    <TextField {...params} fullWidth />
-                  )}
-                  input={<OutlinedInput />}
+                  label="Edition"
+                  select
+                  value={editionValue}
+                  onChange={(e)=>setEditionValue(e.target.value)}
                   variant="outlined"
-                  MenuProps={MenuProps} 
                 >
-                  <MenuItem disabled value="">
-                    <em>Select Edition</em>
-                  </MenuItem>
-                  {edition.map((option) => (
-                    <MenuItem key={option.Edition} value={option.Edition}>
-                      {option.Edition}
+                  {editionCheck &&
+                  editionCheck !== undefined?
+                  editionCheck.map((option,index) => (
+                    <MenuItem key={index} value={option.edition}>
+                      {option.edition}
                     </MenuItem>
-                  ))}
-                </Select>
-              </Grid>
-              <Grid item xs={12} md={6} xl={6}>
+                  ))
+                :"No Edition"
+                }
+                </TextField>
                 </Grid>
-              <Grid item xs={12} md={6} xl={6}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                    label="Published Date"
-                    value={pub_value}
-                    inputFormat="yyyy-MM-dd"
-                    onChange={(newValue) => {
-                      const array = [...pub_value];
-                      const date = startOfDay(newValue);
-                      const index = findIndexDate(array, date);
-                      if (index >= 0) {
-                        array.splice(index, 1);
-                      } else {
-                        array.push(date);
-                      }
-                      setPubvalue(array);           
-                    }}
-                    renderDay={renderPickerDay}
-                    renderInput={(params) => (
-                      <TextField {...params} fullWidth />
-                    )}
-                  />
-                </LocalizationProvider>
-              </Grid>
-              <Grid item xs={12} md={6} xl={6}>
+          {pub_value.date.map((date,index) => (
+            <div key={index} className="pub-list">
+              <Grid container spacing={4}>
+                <Grid item xs={12} md={6} xl={6}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                        label="Published Date"
+                        name="pubdate"
+                        value={date.pub_date}
+                        inputFormat="yyyy-MM-dd"
+                        onChange={(newValue) => {
+                          const list =[...pub_value.date];
+                          let newDate = new Date(newValue)
+                          let date = newDate.getDate();
+                          let month = newDate.getMonth()+1;
+                          let year = newDate.getFullYear();
+                          list[index].pub_date=year+'-'+month+'-'+date;
+                          setPubvalue({...pub_value, date:list});
+                        }} 
+                        renderInput={(params) => (
+                          <TextField {...params} fullWidth />
+                        )}
+                      />
+                  </LocalizationProvider>
                 </Grid>
-              <Grid item xs={12} md={6} xl={6}>
+              {pub_value.date.length!==1 && (
+                <Grid item xs={12} md={6} xl={6} sx={{alignSelf:'center'}}>
+                  <Button
+                  sx={{ maxWidth: 8}} 
+                  size="medium" 
+                  variant="outlined"
+                  onClick={()=>handleItemRemove(index)}
+                  >
+                    -
+                  </Button>
+                 </Grid>
+                )}
+                </Grid>
+              {pub_value.date.length - 1 === index && (
+                <div className="plus-btn">
+                  <Button 
+                  sx={{ maxWidth: 8}} 
+                  size="medium" 
+                  variant="outlined"
+                  onClick={(e)=>handleItemAdd(e)}
+                  >
+                  +
+                  </Button>
+                </div>
+                )}
+                </div>
+                ))}
+                <Grid item xs={12} md={6} xl={6}>
                 <TextField
                   fullWidth
                   id="color"
@@ -403,6 +445,8 @@ const ROrders = () => {
                   id="billing_address"
                   label="Billing Address"
                   select
+                  value={branchValue}
+                  onChange={(e)=>setBranchValue(e.target.value)}
                   variant="outlined"
                 >
                   {branches.map((option) => (

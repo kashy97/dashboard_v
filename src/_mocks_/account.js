@@ -1,6 +1,6 @@
 const account = {
-  displayName: "Ashwin Kannan",
-  email: "ashwin@poorvika.com",
+  displayName: "PoorvikaDashboard",
+  email: "poorvikadashboard@poorvika.com",
   photoURL: "",
 };
 

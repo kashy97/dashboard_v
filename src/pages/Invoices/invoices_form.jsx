@@ -30,24 +30,28 @@ const IAdd = () => {
   });
   const [senderRef, setSenderRef] = useState('');
   const [net,setNet] =useState(0);
-  const [gstAmount, setGstAmount] = useState([]);
+  const [gstAmount, setGstAmount] = useState(0);
   const [vendors, setVendors] =useState([]);
   const [branches, setBranches] =useState([]);
   const [idofvendor,setIdofvendor]=useState(0);
   const [idofbranch,setIdofbranch]=useState(0);
+  const [vendorValue,setVendorValue]=useState('');
+  const [branchValue,setBranchValue]=useState('');
   const [search_index, setSearch_index]= useState(0);
 
   useEffect(()=>{
     vendors.map((v) =>(
-      setIdofvendor(v.id)
+      vendorValue===v.name?
+      setIdofvendor(v.id):null
     ))
-  },[vendors])
+  },[vendorValue, vendors])
   
   useEffect(()=>{
     branches.map((b) =>(
-      setIdofbranch(b.id)
+      branchValue===b.name?
+      setIdofbranch(b.id):null
     ))
-  },[branches])
+  },[branchValue, branches])
   
   useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/vendor',{
@@ -91,7 +95,7 @@ const IAdd = () => {
   }
 
   useEffect(() => {
-    const newTotal =()=> {
+    const newTotal = async()=> {
         var arr = document.getElementsByName("gross");
         var newtotal = 0;
         for(var i = 0; i < arr.length; i++) {
@@ -102,20 +106,20 @@ const IAdd = () => {
         }
     }
     newTotal()
-}, [itemList])
+}, [itemList.items])
   useEffect(() => {
-    const newGST =()=> {
+    const newGST = async()=> {
       var arr1 = document.getElementsByName("gstamount");
       var newgst = 0;
       for(var i = 0; i < arr1.length; i++) {
           if(arr1[i].value) {
               newgst += +arr1[i].value;
+              setGstAmount(newgst)
           }
-          setGstAmount(newgst)
       }
   }
   newGST()
-  }, [itemList])
+  }, [itemList.items])
 
 const handleItemRemove= (index) => {
     const list=itemList.items;
@@ -148,22 +152,7 @@ useEffect(()=> {
   const total = list[search_index].quantity * list[search_index].unit_price;
   list[search_index].gst_amount=Math.round(total * percent)
   list[search_index].net_amount=list[search_index].gst_amount + total;
-},[itemList.items, search_index])
-  // const qtClick = (e,index) => {
-  //   const list =[...itemList];
-  //   if(list[index][e.target.value]===0)
-  //     list[index][e.target.value]="";
-  // }
-  // const priceClick = (e,index) => {
-  //   const list =[...itemList];
-  //   if(list[index][e.target.value]===0)
-  //     list[index][e.target.value]="";
-  // }
-  // const gstClick = (e,index) => {
-  //   const list =[...itemList];
-  //   if(list[index][e.target.value]===0)
-  //     list[index][e.target.value]="";
-  // }
+},[itemList, search_index])
 
   return (
     <Page title="Invoices | Add">
@@ -183,8 +172,8 @@ useEffect(()=> {
               id="vendor"
               label="Vendor"
               select
-              // value={vendors}
-              // onChange={(e)=>setVendors(e.target.value)}
+              value={vendorValue}
+              onChange={(e)=>setVendorValue(e.target.value)}
               helperText="Please select vendor"
               variant="outlined"
             >
@@ -197,7 +186,7 @@ useEffect(()=> {
             <Typography variant="h6">Items</Typography>
             {itemList.items.map((items,index) => (
             <div key={index} className="item-list">
-              <Grid container key={index} spacing={2} sx={{ pr: 5 }}>
+              <Grid container spacing={2} sx={{ pr: 5 }}>
                 <Grid item xs={6} md={6} xl={4}>
                   <TextField
                     fullWidth
@@ -315,8 +304,8 @@ useEffect(()=> {
               id="branches"
               label="Branches"
               select
-              // value={branches}
-              // onChange={(e)=>setBranches(e.target.value)}
+              value={branchValue}
+              onChange={(e)=>setBranchValue(e.target.value)}
               helperText="Please select the branch"
               variant="outlined"
             >
@@ -331,7 +320,6 @@ useEffect(()=> {
             <br />
             <Typography variant="h6">Total</Typography>
             <Stack spacing={1}>
-              {/* <Typography>Net Amount: {}</Typography> */}
               <Typography>GST Amount: {gstAmount}</Typography>
               <Typography>Gross Amount: {net}</Typography>
             </Stack>
