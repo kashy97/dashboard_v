@@ -1,11 +1,11 @@
 import * as Yup from "yup";
 import { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+// import { Link as RouterLink } from "react-router-dom";
 import { useFormik, Form, FormikProvider } from "formik";
 // import { useLocation } from "react-router-dom";
 // material
 import {
-  Link,
+  // Link,
   Stack,
   Checkbox,
   TextField,
@@ -153,14 +153,14 @@ const LoginForm= ()=> {
             label="Remember me"
           />
 
-          <Link
+          {/* <Link
             component={RouterLink}
             variant="subtitle2"
             to="/forgot_password"
             underline="hover"
           >
             Forgot password?
-          </Link>
+          </Link> */}
         </Stack>
 
         <LoadingButton

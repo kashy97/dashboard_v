@@ -16,7 +16,8 @@ import Branches from "./pages/Branches/branches";
 import BAdd from "./pages/Branches/branches_add";
 import BUpdate from "./pages/Branches/branches_update";
 import IUpdate from "./pages/Invoices/invoices_update";
-import ROrders from "./pages/release_orders";
+import ROrders from "./pages/Release Orders/release_orders";
+import RAdd from "./pages/Release Orders/release_orders_add"
 import Register from "./auth/register";
 import RequireAuth from "./routes/RequireAuth";
 import ForgotPassword from "./auth/forgotpassword";
@@ -86,6 +87,10 @@ export default function Router() {
             {
               path: "release_orders",
               element: <ROrders />,
+            },
+            {
+              path: "release_orders/add",
+              element: <RAdd />,
             },
             {
               path: "edition",

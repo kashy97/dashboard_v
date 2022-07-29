@@ -7,7 +7,7 @@ import AuthLayout from "../layouts/AuthLayout";
 // components
 import Page from "../components/Page";
 import LoginForm from "../section/authentication/LoginForm";
-import AuthSocial from "../section/authentication/AuthSocial";
+// import AuthSocial from "../section/authentication/AuthSocial";
 
 // ----------------------------------------------------------------------
 
@@ -42,7 +42,7 @@ export default function Login() {
   return (
     <RootStyle title="Login | Vendor DashBoard">
       <AuthLayout>
-        Don’t have an account? &nbsp;
+        {/* Don’t have an account? &nbsp;
         <Link
           underline="none"
           variant="subtitle2"
@@ -50,7 +50,7 @@ export default function Login() {
           to="/register"
         >
           Get started
-        </Link>
+        </Link> */}
       </AuthLayout>
 
       <SectionStyle sx={{ display: { xs: "none", md: "flex" } }}>
@@ -64,13 +64,13 @@ export default function Login() {
         <ContentStyle>
           <Stack sx={{ mb: 5 }}>
             <Typography variant="h4" gutterBottom>
-              Login to access Vendor DashBoard
+              Login to access DashBoard
             </Typography>
             <Typography sx={{ color: "text.secondary" }}>
               Enter your details below.
             </Typography>
           </Stack>
-          <AuthSocial />
+          {/* <AuthSocial /> */}
 
           <LoginForm />
 

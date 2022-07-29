@@ -5,12 +5,12 @@ import {createBrowserHistory} from 'history';
 import axios from "axios";
 import Page from "../../components/Page";
 
-const Orders = (props) => {
+const ROrders = (props) => {
   const enqueueSnackbar = useSnackbar();
   const history = createBrowserHistory();
   // const [vendorData, setVendorData] = React.useState([]);
-  const [poData, setPoData] = React.useState([]);
-  const url="https://poorvikadashboard.herokuapp.com/api/v1/po";
+  const [roData, setRoData] = React.useState([]);
+  const url="https://poorvikadashboard.herokuapp.com/api/v1/ro";
 
   // React.useEffect((id) => {
   //   console.log("fetched");
@@ -27,14 +27,13 @@ const Orders = (props) => {
     console.log("fetched");
     axios.get(url).then((res) => {
       console.log(res.data)
-      setPoData(res.data)
+      setRoData(res.data)
     });
   }, []);
 
   const deleteVendor = (id) => {
     if(window.confirm("Are you sure you want to delete")){
     axios.delete(`${url}/${id}`).then(()=>{
-        // console.log("deleted",res)
         enqueueSnackbar('Successfully deleted' , { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
         setTimeout(() => {
           window.location.reload();
@@ -44,19 +43,19 @@ const Orders = (props) => {
 
   const updateVendor = (id) => {
     // console.log(id) 
-    history.push(`/dashboard/invoices/update/${id}`)
+    history.push(`/dashboard/ro/update/${id}`)
     window.location.reload();
   }
 
   return (
     <Page title="Invoices">
       <div className="navigation_purchase">
-        <Typography variant="h4">Purchase Orders</Typography>
+        <Typography variant="h4">Release Orders</Typography>
         <Button variant="contained" color="primary" href="invoices/add">
-          Add Purchase Order
+          Create Release Order
         </Button>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 12, sm: 6, md: 4 }}>
-        {poData.map((p)=>(
+        {roData.map((r)=>(
           <Grid item xs={12} md={6} xl={4}>
             <Card 
               elevation={3}
@@ -64,51 +63,52 @@ const Orders = (props) => {
             >
               <CardContent>
                 <Typography>
-                  {p.id}
+                  {r.id}
                 </Typography>
               </CardContent>
               <CardContent sx={{ textAlign:'center'}}>
-                {/* {vendorData.map(v => {
-                 return p.vendor === v.id ?  */}
                 <Typography variant="h5" component="div">
-                {p.name}
-                </Typography>
-                  {/* : <></> }
-                )} */}
-                <Typography variant="h4">
-                  Items
+                {r.ro_date}
                 </Typography>
                 <Typography color="text.secondary">
-                {p.items.title}
+                {r.Add_type}
                 </Typography>
                 <Typography color="text.secondary">
-                {p.items.quantity}
+                {r.Size}
                 </Typography>
                 <Typography color="text.secondary">
-                {p.items.unit_price}
+                {r.color}
                 </Typography>
-                <Typography color="text.secondary">
-                {p.items.net_amount}
+                <Typography>
+                Vendor
                 </Typography>
-                <Typography sx={{ mb:1.5}} color="text.secondary">
-                {p.items.gst}
-                </Typography>
-                <Typography sx={{ mt:1.5 , textAlign:'center'}}>
-                Sender Reference
-                </Typography>
-                {p.sender_reference}
+                {r.vendor.name}
                 <Typography>
                 Gross Amount
                 </Typography>
-                {p.gross_amount}
-                <Typography>
-                Branch
+                <Typography color="text.secondary">
+                {r.gross_amount}
                 </Typography>
-                {p.branches.name}
+                <Typography>
+                GST
+                </Typography>
+                <Typography color="text.secondary">
+                {r.gst}
+                </Typography>
+                <Typography>
+                Net Amount
+                </Typography>
+                <Typography color="text.secondary">
+                {r.net_amunt}
+                </Typography>
+                <Typography>
+                Billing Address
+                </Typography>
+                {r.billing_address.name}
               </CardContent>
               <CardActions sx={{ justifyContent:'center'}}>
-                <Button onClick={()=>updateVendor(p.id)} size="small">Edit</Button>
-                <Button onClick={()=>deleteVendor(p.id)} size="small">Delete</Button>
+                <Button onClick={()=>updateVendor(r.id)} size="small">Edit</Button>
+                <Button onClick={()=>deleteVendor(r.id)} size="small">Delete</Button>
               </CardActions>
             </Card>
           </Grid>
@@ -123,7 +123,7 @@ const Orders = (props) => {
 export default function IntegrationNotistack() {
   return (
     <SnackbarProvider maxSnack={5}>
-      <Orders />
+      <ROrders />
     </SnackbarProvider>
   );
 }

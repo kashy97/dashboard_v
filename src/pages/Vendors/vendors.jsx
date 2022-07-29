@@ -63,9 +63,6 @@ const Vendors = (props) => {
                 </Typography>
               </CardContent>
               <CardContent sx={{ textAlign:'center'}}>
-                <Typography variant="h3">
-                  Vendor Details
-                </Typography>
                 <Typography variant="h5" component="div">
                 {v.name}
                 </Typography>

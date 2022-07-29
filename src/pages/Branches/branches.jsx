@@ -63,9 +63,6 @@ const Branches = (props) => {
                 </Typography>
               </CardContent>
               <CardContent sx={{ textAlign:'center'}}>
-                <Typography variant="h3">
-                  Branch Details
-                </Typography>
                 <Typography variant="h5" component="div">
                 {b.name}
                 </Typography>

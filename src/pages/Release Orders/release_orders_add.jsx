@@ -16,7 +16,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 // import PickersDay from "@mui/lab/PickersDay";
 import startOfDay from "date-fns/startOfDay";
 import DatePicker from "@mui/lab/DatePicker";
-import Page from "../components/Page";
+import Page from "../../components/Page";
 import Axios from "axios";
 import { SnackbarProvider,useSnackbar } from 'notistack';
 
@@ -36,7 +36,7 @@ import { SnackbarProvider,useSnackbar } from 'notistack';
 //   })
 // }));
 
-const ROrders = () => {
+const RAdd = () => {
 
   const {enqueueSnackbar} = useSnackbar();
   const [ro_value, setRovalue] = React.useState([startOfDay(new Date())]);
@@ -473,7 +473,7 @@ const handleItemAdd = (e) => {
 export default function IntegrationNotistack() {
   return (
     <SnackbarProvider maxSnack={5}>
-      <ROrders />
+      <RAdd />
     </SnackbarProvider>
   );
 }

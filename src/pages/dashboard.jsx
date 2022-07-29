@@ -16,6 +16,7 @@ const DashBoard = (props) => {
   const [tableData, setTableData] = React.useState([]);
   const [vendorData, setVendorData] = React.useState([]);
   const [releaseData, setReleaseData] = React.useState([]);
+  const [branchData, setBranchData] = React.useState([]);
   const r_columns = [
     { field: "id", headerName: "#", flex: 1 },
     { field: "vendor", headerName: "Vendor", flex: 1 },
@@ -38,6 +39,14 @@ const DashBoard = (props) => {
     { field: "contact_reference", headerName: "Contact Reference", flex: 1 },
   ];
 
+  const b_columns =[
+    { field: "id", headerName: "#", flex:1 }, 
+    { field: "name", headerName: "Branch Name", flex: 1 },
+    { field: "GST_number", headerName: "GST Number", flex: 1 },
+    { field: "email", headerName: "Email", flex: 1 },
+    // { field: "contact_reference", headerName: "Contact Reference", flex: 1 },
+  ]
+
   useEffect(() => {
     fetch("https://poorvikadashboard.herokuapp.com/api/v1/po")
       .then((data) => data.json())
@@ -59,6 +68,13 @@ const DashBoard = (props) => {
       console.log("fetched");
   }, [props.value]);
 
+  useEffect(()=>{
+    fetch("https://poorvikadashboard.herokuapp.com/api/v1/branches")
+      .then((data) => data.json())
+      .then((data) => setBranchData(data));
+      console.log("fetched");
+  }, [props.value]);
+
   return (
     <Page title="Dashboard | Vendor Dashboard">
       <Container maxWidth="xl">
@@ -76,7 +92,7 @@ const DashBoard = (props) => {
               <CardContent>
                 <Typography variant="h6" style={{ paddingLeft: 5 }}>
                   {" "}
-                  Unpaid Purchase Order
+                  Purchase Order
                 </Typography>
               </CardContent>
               <CardActions sx={{ pl: 2, pr: 2, pb: 2 }}>
@@ -128,6 +144,28 @@ const DashBoard = (props) => {
                   <DataGrid
                     rows={releaseData}
                     columns={r_columns}
+                    pageSize={5}
+                  />
+                </div>
+              </CardActions>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={6} xl={6}>
+            <Card
+              elevation={3}
+              sx={{ width: 1, borderRadius: 5, minHeight: "50vh" }}
+            >
+              <CardContent>
+                <Typography variant="h6" style={{ paddingLeft: 5 }}>
+                  {" "}
+                  Newest Branches
+                </Typography>
+              </CardContent>
+              <CardActions sx={{ pl: 2, pr: 2, pb: 2 }}>
+                <div style={{ height: 300, flexGrow: 1 }}>
+                  <DataGrid
+                    rows={branchData}
+                    columns={b_columns}
                     pageSize={5}
                   />
                 </div>
