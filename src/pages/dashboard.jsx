@@ -21,14 +21,14 @@ const DashBoard = (props) => {
     { field: "id", headerName: "#", flex: 1 },
     { field: "vendor", headerName: "Vendor", flex: 1 },
     { field: "net_amunt", headerName: "Amount", flex: 1 },
-    { field: "edition.edition", headerName: "Edition", flex: 1 },
+    { field: "edition", headerName: "Edition", flex: 1 },
     { field: "view", headerName: "View", flex: 1 },
   ];
   const columns = [
     { field: "id", headerName: "#", flex: 1 },
     { field: "vendor", headerName: "Vendor", flex: 1 },
     { field: "net_amount", headerName: "Amount", flex: 1 },
-    { field: "view", headerName: "View", flex: 1 },
+    { field: "sender_reference", headerName: "Sender Reference", flex: 1 },
   ];
 
   const v_columns = [
@@ -47,11 +47,12 @@ const DashBoard = (props) => {
     // { field: "contact_reference", headerName: "Contact Reference", flex: 1 },
   ]
 
+  
   useEffect(() => {
-    fetch("https://poorvikadashboard.herokuapp.com/api/v1/po")
+    fetch("https://poorvikadashboard.herokuapp.com/api/v1/po_list")
       .then((data) => data.json())
       .then((data) => setTableData(data));
-      console.log("fetched");
+      // console.log(tableData);
   }, [props.value]);
 
   useEffect(() => {

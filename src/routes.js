@@ -73,15 +73,15 @@ export default function Router() {
               element: <BUpdate />,
             },
             {
-              path: "invoices",
+              path: "po",
               element: <Orders />,
             },
             {
-              path: "invoices/add",
+              path: "po/add",
               element: <IAdd />,
             },
             {
-              path: "invoices/update/:id",
+              path: "po/update/:id",
               element: <IUpdate />,
             },
             {

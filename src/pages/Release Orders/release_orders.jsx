@@ -51,7 +51,7 @@ const ROrders = (props) => {
     <Page title="Invoices">
       <div className="navigation_purchase">
         <Typography variant="h4">Release Orders</Typography>
-        <Button variant="contained" color="primary" href="invoices/add">
+        <Button variant="contained" color="primary" href="release_orders/add">
           Create Release Order
         </Button>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 12, sm: 6, md: 4 }}>

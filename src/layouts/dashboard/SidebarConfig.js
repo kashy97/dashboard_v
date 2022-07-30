@@ -23,7 +23,7 @@ const sidebarConfig = [
   },
   {
     title: "purchase order",
-    path: "/dashboard/invoices",
+    path: "/dashboard/po",
     icon: getIcon("eva:shopping-bag-fill"),
   },
   {

@@ -78,7 +78,7 @@ const Branches = (props) => {
                 <Typography>
                   Address
                 </Typography>
-                <Typography noWrap variant="body2">
+                <Typography noWrap variant="body2" color="text.secondary">
                 {b.address1},{b.address2},{b.city},{b.state},{b.country}-{b.pincode}
                 </Typography>
               </CardContent>

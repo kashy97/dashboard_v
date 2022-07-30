@@ -6,26 +6,22 @@ import axios from "axios";
 import Page from "../../components/Page";
 
 const Orders = (props) => {
-  const enqueueSnackbar = useSnackbar();
+  const {enqueueSnackbar} = useSnackbar();
   const history = createBrowserHistory();
   // const [vendorData, setVendorData] = React.useState([]);
+  const [items, setItems] = React.useState([]);
   const [poData, setPoData] = React.useState([]);
-  const url="https://poorvikadashboard.herokuapp.com/api/v1/po";
 
-  // React.useEffect((id) => {
-  //   console.log("fetched");
-  //   fetch("https://poorvikadashboard.herokuapp.com/api/v1/vendor")
-  //     .then((data) => {
-  //       data.json()
-  //       console.log(data)
-  //       setVendorData(data)
-  //     })
-  // },[poData]);
-
+  React.useEffect(()=>{
+    axios.get("https://poorvikadashboard.herokuapp.com/api/v1/items_list").then((res)=>{
+      console.log(res.data)
+      setItems(res.data)
+    });
+  }, []);
 
   React.useEffect(() => {
     console.log("fetched");
-    axios.get(url).then((res) => {
+    axios.get("https://poorvikadashboard.herokuapp.com/api/v1/po_list").then((res) => {
       console.log(res.data)
       setPoData(res.data)
     });
@@ -33,7 +29,7 @@ const Orders = (props) => {
 
   const deleteVendor = (id) => {
     if(window.confirm("Are you sure you want to delete")){
-    axios.delete(`${url}/${id}`).then(()=>{
+    axios.delete(`https://poorvikadashboard.herokuapp.com/api/v1/po/${id}`).then(()=>{
         // console.log("deleted",res)
         enqueueSnackbar('Successfully deleted' , { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
         setTimeout(() => {
@@ -44,21 +40,21 @@ const Orders = (props) => {
 
   const updateVendor = (id) => {
     // console.log(id) 
-    history.push(`/dashboard/invoices/update/${id}`)
+    history.push(`/dashboard/po/update/${id}`)
     window.location.reload();
   }
 
   return (
-    <Page title="Invoices">
+    <Page title="Purchase Order">
       <div className="navigation_purchase">
         <Typography variant="h4">Purchase Orders</Typography>
-        <Button variant="contained" color="primary" href="invoices/add">
+        <Button variant="contained" color="primary" href="po/add">
           Add Purchase Order
         </Button>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 12, sm: 6, md: 4 }}>
         {poData.map((p)=>(
           <Grid item xs={12} md={6} xl={4}>
-            <Card 
+            <Card
               elevation={3}
               sx={{ width:1, borderRadius: 5, minHeight: '25vh', m:'2vh', p:'1vh'}}
             >
@@ -68,43 +64,49 @@ const Orders = (props) => {
                 </Typography>
               </CardContent>
               <CardContent sx={{ textAlign:'center'}}>
-                {/* {vendorData.map(v => {
-                 return p.vendor === v.id ?  */}
                 <Typography variant="h5" component="div">
-                {p.name}
+                Vendor Name: {p.vendor.name} 
                 </Typography>
-                  {/* : <></> }
-                )} */}
-                <Typography variant="h4">
+                <Typography>
+                  {p.title}
+                </Typography>
+                {
+                  items.map((i)=>
+                  p.id===i.Purchase_order ?
+                  <div>
+                  <Typography variant="h5" component="div">
                   Items
-                </Typography>
-                <Typography color="text.secondary">
-                {p.items.title}
-                </Typography>
-                <Typography color="text.secondary">
-                {p.items.quantity}
-                </Typography>
-                <Typography color="text.secondary">
-                {p.items.unit_price}
-                </Typography>
-                <Typography color="text.secondary">
-                {p.items.net_amount}
-                </Typography>
-                <Typography sx={{ mb:1.5}} color="text.secondary">
-                {p.items.gst}
-                </Typography>
+                  </Typography>
+                  <Typography color="text.secondary">
+                  {i.title}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    {i.unit_price}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    {i.quantity}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    {i.gst}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    {i.net_amount}
+                  </Typography>
+                  </div> : null
+                  )
+                }
                 <Typography sx={{ mt:1.5 , textAlign:'center'}}>
-                Sender Reference
+                Sender Reference: {p.sender_reference}
                 </Typography>
-                {p.sender_reference}
                 <Typography>
-                Gross Amount
+                GST Amount: {p.gst_amount}
                 </Typography>
-                {p.gross_amount}
                 <Typography>
-                Branch
+                Gross Amount: {p.net_amount}
                 </Typography>
-                {p.branches.name}
+                <Typography>
+                Branch: {p.branches.name}
+                </Typography>
               </CardContent>
               <CardActions sx={{ justifyContent:'center'}}>
                 <Button onClick={()=>updateVendor(p.id)} size="small">Edit</Button>

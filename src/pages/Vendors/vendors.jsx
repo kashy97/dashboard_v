@@ -24,16 +24,16 @@ const Vendors = (props) => {
       axios.delete(`${url}/${id}`).then(()=> {
           // console.log("deleted",res)
           enqueueSnackbar('Successfully deleted' , { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
-          window.location.reload(false)
+          setTimeout(() => {
+            window.location.reload(false)
+          },2000);
       })
   }}
 
   const updateVendor = (id) => {
     // console.log(id) 
     history.push(`/dashboard/vendors/update/${id}`)
-    setTimeout(() => {
-      window.location.reload();
-    }, 2000); 
+    window.location.reload();
   }
   
   return (
@@ -75,17 +75,21 @@ const Vendors = (props) => {
                 <Typography>
                   Address
                 </Typography>
-                <Typography noWrap variant="body2">
+                <Typography noWrap variant="body2" color="text.secondary">
                 {v.address1},{v.address2},{v.city},{v.state},{v.country}-{v.zipcode}
                 </Typography>
                 <Typography sx={{ mt:1.5 , textAlign:'center'}}>
                 Contact Person
                 </Typography>
+                <Typography color="text.secondary">
                 {v.contact_person}
+                </Typography>
                 <Typography>
                 Contact Reference
                 </Typography>
+                <Typography color="text.secondary">
                 {v.contact_reference}
+                </Typography>
               </CardContent>
               <CardActions sx={{justifyContent:'center'}}>
                 <Button onClick={()=>updateVendor(v.id)} size="small">Edit</Button>

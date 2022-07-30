@@ -13,10 +13,12 @@ import React, { useEffect, useState } from "react";
 import Page from "../../components/Page";
 import Axios from "axios";
 import { SnackbarProvider,useSnackbar } from 'notistack';
+import { createBrowserHistory } from "history";
 
 const IAdd = () => {
 
   const {enqueueSnackbar} = useSnackbar();
+  const history= createBrowserHistory();
   const [itemList, setItemList] = useState({items: [
     {
     unit_price:0,
@@ -85,6 +87,7 @@ const IAdd = () => {
   }).then((response) => {
         console.log(response);
         enqueueSnackbar('Added Purchase Order', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
+        history.push("/dashboard/po")
         setTimeout(() => {
           window.location.reload();
         }, 2000);     
@@ -106,7 +109,7 @@ const IAdd = () => {
         }
     }
     newTotal()
-}, [itemList.items])
+}, [itemList])
   useEffect(() => {
     const newGST = async()=> {
       var arr1 = document.getElementsByName("gstamount");
@@ -119,7 +122,7 @@ const IAdd = () => {
       }
   }
   newGST()
-  }, [itemList.items])
+  }, [itemList])
 
 const handleItemRemove= (index) => {
     const list=itemList.items;
@@ -155,7 +158,7 @@ useEffect(()=> {
 },[itemList, search_index])
 
   return (
-    <Page title="Invoices | Add">
+    <Page title="Purchase Order | Add">
       <Container maxWidth="xl">
         <Box
           component="form"
@@ -207,11 +210,8 @@ useEffect(()=> {
                   label="Price"
                   type="number"
                   variant="outlined"
-                  onClick={(e)=>{
-                    if(e.target.value===0)
-                      {e.target.value=""}
-                    setSearch_index(index)}}
-                  value={items.unit_price}
+                  onClick={()=>setSearch_index(index)}
+                  value={items.unit_price===0?"":items.unit_price}
                   onChange={(e)=>handleItemChange(e,index)}
                 /></Grid>
                 <Grid item xs={6} md={6} xl={4}><TextField
@@ -221,11 +221,8 @@ useEffect(()=> {
                   label="Quantity"
                   type="number"
                   variant="outlined"
-                  onClick={(e)=>{
-                    if(e.target.value===0)
-                      {e.target.value=""}
-                    setSearch_index(index)}}
-                  value={items.quantity}
+                  onClick={(e)=>setSearch_index(index)}
+                  value={items.quantity===0?"":items.quantity}
                   onChange={(e)=>handleItemChange(e,index)}
                 /></Grid>
                 <Grid item xs={6} md={6} xl={4}><TextField
@@ -235,12 +232,8 @@ useEffect(()=> {
                   label="GST"
                   type="number"
                   variant="outlined"
-                  onClick={(e)=>{
-                    if(e.target.value===0)
-                      {e.target.value=""}
-                    setSearch_index(index)  
-                  }}
-                  value={items.gst}
+                  onClick={()=>setSearch_index(index)}
+                  value={items.gst===0?"":items.gst}
                   onChange={(e)=>handleItemChange(e,index)}
                 >
                 </TextField></Grid>

@@ -82,7 +82,7 @@ const RAdd = () => {
   React.useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/Edition',{
     }).then((response) => {
-      console.log("edition",response.data);
+      // console.log("edition",response.data);
       const editions=response.data; 
       setEdition(editions);
     }, (error) => {

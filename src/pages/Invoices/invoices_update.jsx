@@ -99,7 +99,7 @@ import {
     }).then((response) => {
           console.log(response);
           enqueueSnackbar('Updated Purchase Order', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
-          history.push("/dashboard/invoices")
+          history.push("/dashboard/po")
           window.location.reload();
         }, (error) => {
           enqueueSnackbar('Check the data and try again', { variant:'Error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
@@ -132,7 +132,7 @@ import {
     // }
 
     return (
-      <Page title="Invoices | Update">
+      <Page title="Purchase Order | Update">
         <Container maxWidth="xl">
           <Box
             component="form"
