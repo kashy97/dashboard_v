@@ -40,7 +40,7 @@ const ContentStyle = styled("div")(({ theme }) => ({
 
 export default function Login() {
   return (
-    <RootStyle title="Login | Vendor DashBoard">
+    <RootStyle title="Poorvika | Login">
       <AuthLayout>
         {/* Don’t have an account? &nbsp;
         <Link

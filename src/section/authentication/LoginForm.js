@@ -58,7 +58,7 @@ const LoginForm= ()=> {
   // });
 
   const handleCheck = (data) => {
-
+    localStorage.setItem('User-id', data.email)
     console.log(data)
     console.log(JSON.stringify(data,null,2))
      axios.post("https://poorvikadashboard.herokuapp.com/api/v1/login/", {

@@ -44,6 +44,7 @@ const Orders = (props) => {
     window.location.reload();
   }
 
+  console.log("Check", items);
   return (
     <Page title="Purchase Order">
       <div className="navigation_purchase">
@@ -72,25 +73,25 @@ const Orders = (props) => {
                 </Typography>
                 {
                   items.map((i)=>
-                  p.id===i.Purchase_order ?
+                  p.id===i.Purchase_order.id ?
                   <div>
                   <Typography variant="h5" component="div">
                   Items
                   </Typography>
                   <Typography color="text.secondary">
-                  {i.title}
+                  Title: {i.title}
                   </Typography>
                   <Typography color="text.secondary">
-                    {i.unit_price}
+                  Price: {i.unit_price}
                   </Typography>
                   <Typography color="text.secondary">
-                    {i.quantity}
+                  Quantity: {i.quantity}
                   </Typography>
                   <Typography color="text.secondary">
-                    {i.gst}
+                  GST: {i.gst}
                   </Typography>
                   <Typography color="text.secondary">
-                    {i.net_amount}
+                  Net Amount: {i.net_amount}
                   </Typography>
                   </div> : null
                   )

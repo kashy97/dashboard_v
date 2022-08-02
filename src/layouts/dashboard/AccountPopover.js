@@ -26,11 +26,11 @@ const MENU_OPTIONS = [
     icon: "eva:home-fill",
     linkTo: "/dashboard/homepage",
   },
-  {
-    label: "Profile",
-    icon: "eva:person-fill",
-    linkTo: "/dashboard/profile",
-  },
+  // {
+  //   label: "Profile",
+  //   icon: "eva:person-fill",
+  //   linkTo: "/dashboard/profile",
+  // },
 ];
 
 // ----------------------------------------------------------------------
@@ -49,6 +49,7 @@ export default function AccountPopover(props) {
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
+    localStorage.removeItem("User-id");
     history.push("/login")
     window.location.reload();
   }

@@ -6,7 +6,7 @@ import axios from "axios";
 import Page from "../../components/Page";
 
 const ROrders = (props) => {
-  const enqueueSnackbar = useSnackbar();
+  const {enqueueSnackbar} = useSnackbar();
   const history = createBrowserHistory();
   // const [vendorData, setVendorData] = React.useState([]);
   const [roData, setRoData] = React.useState([]);

@@ -18,22 +18,42 @@ const DashBoard = (props) => {
   const [releaseData, setReleaseData] = React.useState([]);
   const [branchData, setBranchData] = React.useState([]);
   const r_columns = [
-    { field: "id", headerName: "#", flex: 1 },
-    { field: "vendor", headerName: "Vendor", flex: 1 },
+    { 
+      field: "id", 
+      headerName: "#", 
+      flex: 1,
+      valueFormatter: ({value}) => 'RO'+value
+    },
+    { field: "ro_date", headerName: "Ro Date", flex: 1},
+    { 
+      field: "vendor", 
+      headerName: "Vendor", 
+      flex: 1,
+      valueFormatter: ({value}) => value.name
+    },
     { field: "net_amunt", headerName: "Amount", flex: 1 },
-    { field: "edition", headerName: "Edition", flex: 1 },
-    { field: "view", headerName: "View", flex: 1 },
+    // { field: "view", headerName: "View", flex: 1 },
   ];
   const columns = [
-    { field: "id", headerName: "#", flex: 1 },
-    { field: "vendor", headerName: "Vendor", flex: 1 },
+    { 
+      field: "id", 
+      headerName: "#", 
+      flex: 1,
+      valueFormatter: ({value}) => 'PO'+value
+    },
+    { 
+      field: "vendor",
+      headerName: "Vendor",
+      flex: 1,
+      valueFormatter: ({value}) => value.name
+     },
     { field: "net_amount", headerName: "Amount", flex: 1 },
     { field: "sender_reference", headerName: "Sender Reference", flex: 1 },
   ];
 
   const v_columns = [
     { field: "id", headerName: "#", flex:1 }, 
-    { field: "Supplier_code", headerName: "Supplier Code", flex: 1 },
+    // { field: "Supplier_code", headerName: "Supplier Code", flex: 1 },
     { field: "name", headerName: "Vendor Name", flex: 1 },
     { field: "address1", headerName: "Address", flex: 1 },
     { field: "contact_reference", headerName: "Contact Reference", flex: 1 },
@@ -41,7 +61,7 @@ const DashBoard = (props) => {
 
   const b_columns =[
     { field: "id", headerName: "#", flex:1 }, 
-    { field: "name", headerName: "Branch Name", flex: 1 },
+    { field: "state", headerName: "State", flex: 1 },
     { field: "GST_number", headerName: "GST Number", flex: 1 },
     { field: "email", headerName: "Email", flex: 1 },
     // { field: "contact_reference", headerName: "Contact Reference", flex: 1 },
@@ -63,7 +83,7 @@ const DashBoard = (props) => {
   }, [props.value]);
 
   useEffect(() => {
-    fetch("https://poorvikadashboard.herokuapp.com/api/v1/ro")
+    fetch("https://poorvikadashboard.herokuapp.com/api/v1/ro_list")
       .then((data) => data.json())
       .then((data) => setReleaseData(data));
       console.log("fetched");
@@ -77,7 +97,7 @@ const DashBoard = (props) => {
   }, [props.value]);
 
   return (
-    <Page title="Dashboard | Vendor Dashboard">
+    <Page title="Poorvika | Dashboard">
       <Container maxWidth="xl">
         <Box sx={{ pb: 5 }}>
           <Typography sx={{ padding: 5 }} variant="h4">

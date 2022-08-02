@@ -1,270 +1,339 @@
 import {
-    Box,
-    Button,
-    Divider,
-    MenuItem,
-    Grid,
-    Stack,
-    TextField,
-    Container,
-    Typography,
-  } from "@mui/material";
-  import React, { useEffect, useState } from "react";
-  import { useParams } from "react-router-dom";
-  import Page from "../../components/Page";
-  import axios from "axios";
-  import { SnackbarProvider,useSnackbar } from 'notistack';
-  import { createBrowserHistory } from "history";
+  Box,
+  Button,
+  Divider,
+  MenuItem,
+  Grid,
+  Stack,
+  TextField,
+  Container,
+  Typography,
+} from "@mui/material";
+import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import Page from "../../components/Page";
+import Axios from "axios";
+import { SnackbarProvider,useSnackbar } from 'notistack';
+import { createBrowserHistory } from "history";
+
+const IAdd = () => {
+
+  const {id} = useParams();
+  const {enqueueSnackbar} = useSnackbar();
+  const history= createBrowserHistory();
+  const [itemList, setItemList] = useState({items: [
+    {
+    unit_price:0,
+    title:'',
+    quantity:0,
+    gst:0,
+    gst_amount:0,
+    net_amount:0,
+    }
+  ]
+  });
+  const [senderRef, setSenderRef] = useState('');
+  const [net,setNet] =useState(0);
+  const [gstAmount, setGstAmount] = useState(0);
+  const [vendors, setVendors] =useState([]);
+  const [branches, setBranches] =useState([]);
+  const [idofvendor,setIdofvendor]=useState(0);
+  const [idofbranch,setIdofbranch]=useState(0);
+  const [vendorValue,setVendorValue]=useState('');
+  const [branchValue,setBranchValue]=useState('');
+  const [search_index, setSearch_index]= useState(0);
+
+  useEffect(()=>{
+    vendors.map((v) =>(
+      vendorValue===v.name?
+      setIdofvendor(v.id):null
+    ))
+  },[vendorValue, vendors])
   
-  const IUpdate = (props) => {
+  useEffect(()=>{
+    branches.map((b) =>(
+      branchValue===b.name?
+      setIdofbranch(b.id):null
+    ))
+  },[branchValue, branches])
   
-    const {id}= useParams();
-    const {enqueueSnackbar} = useSnackbar();
-    const history= createBrowserHistory();
-  
-    // const [invoiceData,setInvoiceData]= useState([]);
-    const [price, setPrice] = useState(0);
-    const [senderRef, setSenderRef] = useState('');
-    const [title,setTitle] = useState('');
-    const [quantity, setQuantity] = useState(0);
-    const [gst, setGst] = useState(0);
-    const [gross, setGross] = useState(0);
-    const [gstamt, setGstamt] = useState(0);
-    const [vendors, setVendors] =useState([]);
-    const [branches, setBranches] =useState([]);
-    const [idofvendor,setIdofvendor]=useState(0);
-    const [idofbranch,setIdofbranch]=useState(0);
-  
-    useEffect(()=>{
-      vendors.map((v) =>(
-        setIdofvendor(v.id)
-      ))
-    },[vendors])
-    
-    useEffect(()=>{
-      branches.map((b) =>(
-        setIdofbranch(b.id)
-      ))
-    },[branches])
-    
-    useEffect(()=>{
-      axios.get('https://poorvikadashboard.herokuapp.com/api/v1/vendor',{
-      }).then((response) => {
-            console.log("vendor",response.data);
-            const vendors=response.data;
-            // console.log("vendor",vendors[0].name);
-            setVendors(vendors);
-          }, (error) => {
-            console.log(error);
-        });
-      },[])
-    useEffect(()=>{
-      axios.get('https://poorvikadashboard.herokuapp.com/api/v1/branches',{
-      }).then((response) => {
-            console.log("branches",response.data);
-            const branches=response.data;
-            // console.log("branches",branches[0].name);
-            setBranches(branches);
-          }, (error) => {
-            console.log(error);
-        });
-      },[])
-      // useEffect(()=>{
-      //   axios.get(`https://poorvikadashboard.herokuapp.com/api/v1/po/${id}`,{
-      //   }).then((response) => {
-      //         console.log("branches",response.data);
-      //         setInvoiceData(response.data);
-      //       }, (error) => {
-      //         console.log(error);
-      //     });
-      //   },[id])
-    const handleUpdate=(e)=>{
-      e.preventDefault();
-      axios.put(`https://poorvikadashboard.herokuapp.com/api/v1/po/${id}`,{
-        vendor: idofvendor,
-        sender_reference: senderRef,
-        gross_amount: gross,
-        gst_amount: gstamt,
-        net_amount: gross,
-        items: [
-            {
-                title: title,
-                quantity: quantity,
-                unit_price: price,
-                net_amount: gross,
-                gst: gst,
-            },
-        ],
-        branches: idofbranch,
+  useEffect(()=>{
+    Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/vendor',{
     }).then((response) => {
-          console.log(response);
-          enqueueSnackbar('Updated Purchase Order', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
-          history.push("/dashboard/po")
-          window.location.reload();
+          console.log("vendor",response.data);
+          const vendors=response.data;
+          setVendors(vendors);
         }, (error) => {
-          enqueueSnackbar('Check the data and try again', { variant:'Error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
           console.log(error);
       });
-    }
-    const qtClick = () => {
-      if(quantity===0)
-        setQuantity('')
-    }
-    const priceClick = () => {
-      if(price===0)
-        setPrice('')
-    }
-    const gstClick = () => {
-      if(gst===0)
-        setGst('')
-    }
-    useEffect(() => {
-      const percent = gst / 100;
-      const total = quantity * price;
-      setGstamt(Math.round(total * percent));
-      setGross(gstamt + total);
-    }, [gst, quantity, price, gstamt]);
-  
-    // const handleChange=(e)=>{
-    //     const newdata={...invoiceData}
-    //     newdata[e.target.id]=e.target.value
-    //     setInvoiceData(newdata)
-    // }
+    },[])
+  useEffect(()=>{
+    Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/branches',{
+    }).then((response) => {
+          console.log("branches",response.data);
+          const branches=response.data;
+          setBranches(branches);
+        }, (error) => {
+          console.log(error);
+      });
+    },[])
+  const handleUpdate= async(e)=>{
+    e.preventDefault();
+    Axios.put(`https://poorvikadashboard.herokuapp.com/api/v1/po/${id}`,{
+      vendor: idofvendor,
+      sender_reference: senderRef,
+      gst_amount: gstAmount,
+      net_amount: net,
+      items: itemList.items,
+      branches: idofbranch,
+  }).then((response) => {
+        console.log(response);
+        enqueueSnackbar('Update Purchase Order', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
+        history.push("/dashboard/po")
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);     
+      }, (error) => {
+        enqueueSnackbar('Check the data and try again', { variant:'Error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
+        console.log(error);
+    });
+  }
 
-    return (
-      <Page title="Purchase Order | Update">
-        <Container maxWidth="xl">
-          <Box
-            component="form"
-            sx={{ paddingRight: 5, paddingLeft: 5 }}
-            noValidate
-            autoComplete="off"
-          >
-            <Stack spacing={2}>
-              <Typography sx={{ paddingTop: 5, paddingBottom: 5 }} variant="h4">
-                Add Purchase Order
-              </Typography>
-              <Typography variant="h6">Vendor</Typography>
-              <TextField
-                id="vendor"
-                label="Vendor"
-                select
-                // value={vendors}
-                // onChange={(e)=>setVendors(e.target.value)}
-                helperText="Please select vendor"
-                variant="outlined"
-              >
-                {vendors.map((option) => (
-                  <MenuItem key={option.id} value={option.name}>
-                    {option.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <Typography variant="h6">Items</Typography>
+  useEffect(() => {
+    const newTotal = async()=> {
+        var arr = document.getElementsByName("gross");
+        var newtotal = 0;
+        for(var i = 0; i < arr.length; i++) {
+            if(arr[i].value) {
+                newtotal += +arr[i].value;
+            }
+            setNet(newtotal)
+        }
+    }
+    newTotal()
+})
+  useEffect(() => {
+    const newGST = async()=> {
+      var arr1 = document.getElementsByName("gstamount");
+      var newgst = 0;
+      for(var i = 0; i < arr1.length; i++) {
+          if(arr1[i].value) {
+              newgst += +arr1[i].value;
+              setGstAmount(newgst)
+          }
+      }
+  }
+  newGST()
+  })
+
+const handleItemRemove= (index) => {
+    const list=itemList.items;
+    list.splice(index,1);
+    setItemList((prevState)=>({...prevState,list}));
+};
+
+const handleItemAdd = (e) => {
+    e.preventDefault()
+    setItemList((prevState)=>({...prevState, items:[...prevState.items, 
+    {
+      unit_price:0,
+      title:'',
+      quantity:0,
+      gst:0,
+      gst_amount:0,
+      net_amount:0,
+  }]}));
+};
+
+const handleItemChange=(e,index)=>{
+  const list =[...itemList.items];
+  list[index][e.target.name]=e.target.value;
+  setItemList({...itemList, items:list});
+};
+
+useEffect(()=> {
+  const list = [...itemList.items];
+  const percent = list[search_index].gst / 100;
+  const total = list[search_index].quantity * list[search_index].unit_price;
+  list[search_index].gst_amount=Math.round(total * percent)
+  list[search_index].net_amount=list[search_index].gst_amount + total;
+},[itemList, search_index])
+
+  return (
+    <Page title="Purchase Order | Add">
+      <Container maxWidth="xl">
+        <Box
+          component="form"
+          sx={{ paddingRight: 5, paddingLeft: 5 }}
+          noValidate
+          autoComplete="off"
+        >
+          <Stack spacing={2}>
+            <Typography sx={{ paddingTop: 5, paddingBottom: 5 }} variant="h4">
+              Update Purchase Order
+            </Typography>
+            <Typography variant="h6">Vendor</Typography>
+            <TextField
+              id="vendor"
+              label="Vendor"
+              select
+              value={vendorValue}
+              onChange={(e)=>setVendorValue(e.target.value)}
+              helperText="Please select vendor"
+              variant="outlined"
+            >
+              {vendors.map((option) => (
+                <MenuItem key={option.id} value={option.name}>
+                  {option.name}
+                </MenuItem>
+              ))}
+            </TextField>
+            <Typography variant="h6">Items</Typography>
+            {itemList.items.map((items,index) => (
+            <div key={index} className="item-list">
               <Grid container spacing={2} sx={{ pr: 5 }}>
                 <Grid item xs={6} md={6} xl={4}>
                   <TextField
                     fullWidth
                     id="title"
+                    name="title"
                     label="Title"
+                    onClick={()=>setSearch_index(index)}
                     type="text"
-                    value={title}
-                    onChange={(e)=>setTitle(e.target.value)}
+                    value={items.title}
+                    onChange={(e)=>handleItemChange(e,index)}
                     variant="outlined"
-                  /></Grid>
+                  />
+                </Grid>
                 <Grid item xs={6} md={6} xl={4}><TextField
                   fullWidth
                   id="price"
+                  name="unit_price"
                   label="Price"
                   type="number"
                   variant="outlined"
-                  onClick={priceClick}
-                  value={price}
-                  onChange={(e)=>setPrice(Number(e.target.value))}
+                  onClick={()=>setSearch_index(index)}
+                  value={items.unit_price===0?"":items.unit_price}
+                  onChange={(e)=>handleItemChange(e,index)}
                 /></Grid>
                 <Grid item xs={6} md={6} xl={4}><TextField
                   fullWidth
                   id="quantity"
+                  name="quantity"
                   label="Quantity"
                   type="number"
                   variant="outlined"
-                  onClick={qtClick}
-                  value={quantity}
-                  onChange={(e)=>setQuantity(Number(e.target.value))}
+                  onClick={(e)=>setSearch_index(index)}
+                  value={items.quantity===0?"":items.quantity}
+                  onChange={(e)=>handleItemChange(e,index)}
                 /></Grid>
                 <Grid item xs={6} md={6} xl={4}><TextField
                   id="gst"
+                  name="gst"
                   fullWidth
                   label="GST"
+                  type="number"
                   variant="outlined"
-                  onClick={gstClick}
-                  value={gst}
-                  onChange={(e)=>setGst(Number(e.target.value))}
+                  onClick={()=>setSearch_index(index)}
+                  value={items.gst===0?"":items.gst}
+                  onChange={(e)=>handleItemChange(e,index)}
                 >
                 </TextField></Grid>
                 <Grid item xs={6} md={6} xl={4}><TextField
                   fullWidth
+                  id="gstamount"
+                  name="gstamount"
+                  label="GST Amount"
+                  type="number"
+                  variant="outlined"
+                  value={items.gst_amount}
+                  disabled
+                /></Grid>
+                <Grid item xs={6} md={6} xl={4}><TextField
+                  fullWidth
                   id="gross"
+                  name="gross"
                   label="Gross Amount"
                   type="number"
                   variant="outlined"
-                  value={gross}
+                  value={items.net_amount}
                   disabled
                 /></Grid>
+                {itemList.items.length!==1 && (
+                <Grid item xs={6} md={6} xl={4}>
+                  <Button
+                  sx={{ maxWidth: 8}} 
+                  size="medium" 
+                  variant="outlined"
+                  onClick={()=>handleItemRemove(index)}
+                  >
+                    -
+                  </Button>
+                  </Grid>
+                )}
               </Grid>
-              {/* <Button sx={{ maxWidth: 8 }} size="medium" variant="outlined">
-              +
-            </Button> */}
-              <TextField
-                id="sender"
-                label="Sender Reference"
-                type="text"
-                value={senderRef}
-                onChange={(e)=>setSenderRef(e.target.value)}
-                variant="outlined"
-              />
-              <Typography variant="h6">Branches</Typography>
-              <TextField
-                id="branches"
-                label="Branches"
-                select
-                // value={branches}
-                // onChange={(e)=>setBranches(e.target.value)}
-                helperText="Please select the branch"
-                variant="outlined"
-              >
-                {branches.map((option) => (
-                  <MenuItem key={option.id} value={option.name}>
-                    {option.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <br />
-              <Divider />
-              <br />
-              <Typography variant="h6">Total</Typography>
-              <Stack spacing={1}>
-                {/* <Typography>Net Amount: {}</Typography> */}
-                <Typography>GST Amount: {gstamt}</Typography>
-                <Typography>Gross Amount: {gross}</Typography>
-              </Stack>
+              {itemList.items.length - 1 === index && (
+                <div className="plus-btn">
+                  <Button 
+                  sx={{ maxWidth: 8}} 
+                  size="medium" 
+                  variant="outlined"
+                  onClick={(e)=>handleItemAdd(e)}
+                  >
+                  +
+                  </Button>
+                </div>
+              )}
+            </div>
+            ))}
+            <TextField
+              id="sender"
+              label="Sender Reference"
+              type="text"
+              value={senderRef}
+              onChange={(e)=>setSenderRef(e.target.value)}
+              variant="outlined"
+            />
+            <Typography variant="h6">Branches</Typography>
+            <TextField
+              id="branches"
+              label="Branches"
+              select
+              value={branchValue}
+              onChange={(e)=>setBranchValue(e.target.value)}
+              helperText="Please select the branch"
+              variant="outlined"
+            >
+              {branches.map((option) => (
+                <MenuItem key={option.id} value={option.name}>
+                  {option.name}
+                </MenuItem>
+              ))}
+            </TextField>
+            <br />
+            <Divider />
+            <br />
+            <Typography variant="h6">Total</Typography>
+            <Stack spacing={1}>
+              <Typography>GST Amount: {gstAmount}</Typography>
+              <Typography>Gross Amount: {net}</Typography>
             </Stack>
-            <Box display="flex" justifyContent="center" alignItems="center">
-              <Button variant="contained" size="large" onClick={handleUpdate} sx={{ maxWidth: 0.5 }}>
-                UPDATE
-              </Button>
-            </Box>
+          </Stack>
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <Button variant="contained" size="large" onClick={handleUpdate} sx={{ maxWidth: 0.5 }}>
+              UPDATE
+            </Button>
           </Box>
-        </Container>
-      </Page>
-    );
-  };
-  
-  export default function IntegrationNotistack() {
-    return (
-      <SnackbarProvider maxSnack={5}>
-        <IUpdate />
-      </SnackbarProvider>
-    );
-  }
-  
+        </Box>
+      </Container>
+    </Page>
+  );
+};
+
+export default function IntegrationNotistack() {
+  return (
+    <SnackbarProvider maxSnack={5}>
+      <IAdd />
+    </SnackbarProvider>
+  );
+}
