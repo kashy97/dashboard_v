@@ -10,7 +10,8 @@ const ROrders = (props) => {
   const history = createBrowserHistory();
   // const [vendorData, setVendorData] = React.useState([]);
   const [roData, setRoData] = React.useState([]);
-  const url="https://poorvikadashboard.herokuapp.com/api/v1/ro";
+  const [pubData, setPubData] = React.useState([]);
+  const [editionData, setEditionData] = React.useState([]); 
 
   // React.useEffect((id) => {
   //   console.log("fetched");
@@ -22,18 +23,32 @@ const ROrders = (props) => {
   //     })
   // },[poData]);
 
+  React.useEffect(() => {
+    console.log("fetched");
+    axios.get("https://poorvikadashboard.herokuapp.com/api/v1/ro_list").then((res) => {
+      console.log(res.data)
+      setRoData(res.data)
+    });
+  }, []);
+  React.useEffect(() => {
+    console.log("fetched");
+    axios.get("https://poorvikadashboard.herokuapp.com/api/v1/ro_Pub_date_list").then((res) => {
+      console.log(res.data)
+      setPubData(res.data)
+    });
+  }, []);
 
   React.useEffect(() => {
     console.log("fetched");
-    axios.get(url).then((res) => {
+    axios.get("https://poorvikadashboard.herokuapp.com/api/v1/ro_edition_list").then((res) => {
       console.log(res.data)
-      setRoData(res.data)
+      setEditionData(res.data)
     });
   }, []);
 
   const deleteVendor = (id) => {
     if(window.confirm("Are you sure you want to delete")){
-    axios.delete(`${url}/${id}`).then(()=>{
+    axios.delete(`https://poorvikadashboard.herokuapp.com/api/v1/ro_list/${id}`).then(()=>{
         enqueueSnackbar('Successfully deleted' , { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
         setTimeout(() => {
           window.location.reload();
@@ -68,43 +83,58 @@ const ROrders = (props) => {
               </CardContent>
               <CardContent sx={{ textAlign:'center'}}>
                 <Typography variant="h5" component="div">
-                {r.ro_date}
-                </Typography>
-                <Typography color="text.secondary">
-                {r.Add_type}
-                </Typography>
-                <Typography color="text.secondary">
-                {r.Size}
-                </Typography>
-                <Typography color="text.secondary">
-                {r.color}
+                RoDate: {r.ro_date}
                 </Typography>
                 <Typography>
-                Vendor
-                </Typography>
-                {r.vendor.name}
-                <Typography>
-                Gross Amount
-                </Typography>
-                <Typography color="text.secondary">
-                {r.gross_amount}
+                Add Type: {r.Add_type}
                 </Typography>
                 <Typography>
-                GST
-                </Typography>
-                <Typography color="text.secondary">
-                {r.gst}
+                Size: {r.Size}
                 </Typography>
                 <Typography>
-                Net Amount
-                </Typography>
-                <Typography color="text.secondary">
-                {r.net_amunt}
+                Color: {r.color}
                 </Typography>
                 <Typography>
-                Billing Address
+                Vendor Name: {r.vendor.name}
                 </Typography>
-                {r.billing_address.name}
+                {
+                pubData.map((p)=>
+                  r.id===p.ro.id ?
+                  <div>
+                  <Typography variant="h5" component="div">
+                  Pub Date
+                  </Typography>
+                  <Typography color="text.secondary">
+                  {p.pub_date}
+                  </Typography>
+                  </div> : null
+                  )
+                }
+                {
+                editionData.map((e)=>
+                  r.id===e.ro.id ?
+                  <div>
+                  <Typography variant="h5" component="div">
+                  Edition
+                  </Typography>
+                  <Typography color="text.secondary">
+                  {e.edition.edition}
+                  </Typography>
+                  </div> : null
+                  )
+                }
+                <Typography>
+                Gross Amount: {r.gross_amount}
+                </Typography>
+                <Typography>
+                GST: {r.gst}
+                </Typography>
+                <Typography>
+                Net Amount: {r.net_amunt}
+                </Typography>
+                <Typography>
+                Billing Address: {r.billing_address.name}
+                </Typography>
               </CardContent>
               <CardActions sx={{ justifyContent:'center'}}>
                 <Button onClick={()=>updateVendor(r.id)} size="small">Edit</Button>

@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import React, { useEffect } from "react";
 import Page from "../components/Page";
+import AppWidgetSummary from "../section/@dashboard/AppWidgetSummary";
 
 const DashBoard = (props) => {
   //insert data history here
@@ -17,6 +18,10 @@ const DashBoard = (props) => {
   const [vendorData, setVendorData] = React.useState([]);
   const [releaseData, setReleaseData] = React.useState([]);
   const [branchData, setBranchData] = React.useState([]);
+  // const [purchaseAmount, setPurchaseAmount] = React.useState(0);
+  // const [releaseAmount, setReleaseAmount] = React.useState(0);
+  // const [totalPurchase, setTotalPurchase] = React.useState(0);
+  // const [totalRelease, setTotalRelease] =React.useState(0);
   const r_columns = [
     { 
       field: "id", 
@@ -31,7 +36,7 @@ const DashBoard = (props) => {
       flex: 1,
       valueFormatter: ({value}) => value.name
     },
-    { field: "net_amunt", headerName: "Amount", flex: 1 },
+    { field: "net_amunt", id: "r_amount", headerName: "Amount", flex: 1 },
     // { field: "view", headerName: "View", flex: 1 },
   ];
   const columns = [
@@ -47,7 +52,7 @@ const DashBoard = (props) => {
       flex: 1,
       valueFormatter: ({value}) => value.name
      },
-    { field: "net_amount", headerName: "Amount", flex: 1 },
+    { field: "net_amount", id: "p_amount", headerName: "Amount", flex: 1 },
     { field: "sender_reference", headerName: "Sender Reference", flex: 1 },
   ];
 
@@ -67,6 +72,35 @@ const DashBoard = (props) => {
     // { field: "contact_reference", headerName: "Contact Reference", flex: 1 },
   ]
 
+  // useEffect(() => {
+  //   const rTotal = async()=> {
+  //       var arr = document.getElementsByName("r_amount");
+  //       setTotalRelease(arr.length)
+  //       var rtotal = 0;
+  //       for(var i = 0; i < arr.length; i++) {
+  //           if(arr[i].value) {
+  //               rtotal += +arr[i].value;
+  //           }
+  //           setReleaseAmount(rtotal)
+  //       }
+  //   }
+  //   rTotal()
+  // }, [releaseData])
+  
+  // useEffect(() => {
+  //   const pTotal = async()=> {
+  //       var arr = document.getElementsById("p_amount");
+  //       setTotalPurchase(arr.length)
+  //       var ptotal = 0;
+  //       for(var i = 0; i < arr.length; i++) {
+  //           if(arr[i].value) {
+  //               ptotal += +arr[i].value;
+  //           }
+  //           setPurchaseAmount(ptotal)
+  //       }
+  //   }
+  //   pTotal()
+  // }, [tableData])
   
   useEffect(() => {
     fetch("https://poorvikadashboard.herokuapp.com/api/v1/po_list")
@@ -104,6 +138,24 @@ const DashBoard = (props) => {
             Dashboard
           </Typography>
         </Box>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6} md={3}>
+            <AppWidgetSummary title="PO Gross" total={752752} icon={'ant-design:dollar-circle-filled'} />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <AppWidgetSummary title="Total PO" total={7272782} color="info" icon={'ant-design:file-filled'} />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <AppWidgetSummary title="RO Gross" total={7527237} color="warning" icon={'ant-design:dollar-circle-filled'} />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <AppWidgetSummary title="Total RO" total={577878788} color="error" icon={'ant-design:file-filled'} />
+          </Grid>
+        </Grid>
+        <br />
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} xl={6}>
             <Card

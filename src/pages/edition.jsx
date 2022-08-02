@@ -1,6 +1,7 @@
 // import { Link as RouterLink } from 'react-router-dom';
 import React from 'react';
 import Axios from 'axios';
+import { DataGrid } from "@mui/x-data-grid";
 import { SnackbarProvider,useSnackbar } from 'notistack';
 // @mui
 // import { styled } from '@mui/material/styles';
@@ -16,7 +17,6 @@ import {
  } from '@mui/material';
 // components
 import Page from '../components/Page';
-import EditionTable from '../pages/EditionTable';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,7 @@ import EditionTable from '../pages/EditionTable';
 
 const Edition = ()=>{
   const {enqueueSnackbar} = useSnackbar();
+  const [tableData, setTableData] = React.useState([]);
   const [editionCheck,setEditionCheck] = React.useState([]);
   const [publication,setPublication]= React.useState([]);
   const [editionValue,setEditionValue] = React.useState('');
@@ -45,6 +46,32 @@ const Edition = ()=>{
   const [districtValue,setDistrictValue] = React.useState('');
   const [district,setDistrict] = React.useState([]);
   
+  const columns =[
+    { 
+      field: "edition", 
+      headerName: "Publication", 
+      flex:1,
+      valueFormatter: ({value}) => value.pub.pub_name,
+    }, 
+    { 
+      field: "edition", 
+      headerName: "Edition", 
+      flex: 1,
+      valueFormatter: ({value}) => value.edition,
+  },
+    { 
+      field: "district", 
+      headerName: "District", 
+      flex: 1,
+      valueFormatter: ({value}) => value.district,
+  },
+      { 
+        field: "district", 
+        headerName: "State", 
+        flex: 1,
+        valueFormatter: ({value}) => value.state.state,
+      },
+  ];
   const arrayUniqueByPubName = [...new Map(publication.map(item =>
     [item["pub_name"], item])).values()];
   const arrayUniqueByStateName = [...new Map(state.map(item =>
@@ -58,6 +85,15 @@ const Edition = ()=>{
     const st = district.filter(x => x.state === id);
     setDistrictCheck(st);
   }
+
+  React.useEffect(() => {
+    fetch("https://poorvikadashboard.herokuapp.com/api/v1/Edition_save_list")
+      .then((data) => data.json())
+      .then((data) => setTableData(data));
+      // console.log(tableData);
+  }, []);
+
+
   React.useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/Edition',{
     }).then((response) => {
@@ -168,6 +204,7 @@ const Edition = ()=>{
                       onChange={(e)=>handlePublication(e.target.value)}
                       variant="outlined"
                     >
+                      <MenuItem disabled>Select Publication</MenuItem>
                       {arrayUniqueByPubName &&
                       arrayUniqueByPubName !== undefined?
                       arrayUniqueByPubName.map((option,index) => (
@@ -189,6 +226,7 @@ const Edition = ()=>{
                     onChange={(e)=>setEditionValue(e.target.value)}
                     variant="outlined"
                   >
+                    <MenuItem disabled>Select Edition</MenuItem>
                     {editionCheck &&
                     editionCheck !== undefined?
                     editionCheck.map((option,index) => (
@@ -196,7 +234,7 @@ const Edition = ()=>{
                         {option.edition}
                       </MenuItem>
                     ))
-                  :"No Edition"
+                  : "No Edition"
                   }
                   </TextField>
                   </Grid>
@@ -210,6 +248,7 @@ const Edition = ()=>{
                       onChange={(e)=>handleState(e.target.value)}
                       variant="outlined"
                     >
+                      <MenuItem disabled>Select State</MenuItem>
                       {arrayUniqueByStateName &&
                       arrayUniqueByStateName !== undefined?
                       arrayUniqueByStateName.map((option,index) => (
@@ -231,6 +270,7 @@ const Edition = ()=>{
                     onChange={(e)=>setDistrictValue(e.target.value)}
                     variant="outlined"
                   >
+                    <MenuItem disabled>Select District</MenuItem>
                     {districtCheck &&
                     districtCheck !== undefined?
                     districtCheck.map((option,index) => (
@@ -250,7 +290,10 @@ const Edition = ()=>{
                 </Button>
               </Box>
               <br />
-              <EditionTable idofedition={idofedition} />
+              <Box sx={{ height: 400, width: '100%' }}>
+                <DataGrid getRowId={(r)=>r.id} rows={tableData} columns={columns} />
+              </Box>
+
         {/* </Container> */}
       </Page>
     </div>
