@@ -1,7 +1,7 @@
 // import { Link as RouterLink } from 'react-router-dom';
 import React from 'react';
 import Axios from 'axios';
-import { DataGrid } from "@mui/x-data-grid";
+// import { DataGrid } from "@mui/x-data-grid";
 import { SnackbarProvider,useSnackbar } from 'notistack';
 // @mui
 // import { styled } from '@mui/material/styles';
@@ -16,7 +16,8 @@ import {
   Box,
  } from '@mui/material';
 // components
-import Page from '../components/Page';
+import Page from '../../components/Page';
+import EditionTable from '../Edition/editionTable';
 
 // ----------------------------------------------------------------------
 
@@ -34,7 +35,7 @@ import Page from '../components/Page';
 
 const Edition = ()=>{
   const {enqueueSnackbar} = useSnackbar();
-  const [tableData, setTableData] = React.useState([]);
+  // const [tableData, setTableData] = React.useState([]);
   const [editionCheck,setEditionCheck] = React.useState([]);
   const [publication,setPublication]= React.useState([]);
   const [editionValue,setEditionValue] = React.useState('');
@@ -46,32 +47,32 @@ const Edition = ()=>{
   const [districtValue,setDistrictValue] = React.useState('');
   const [district,setDistrict] = React.useState([]);
   
-  const columns =[
-    { 
-      field: "edition", 
-      headerName: "Publication", 
-      flex:1,
-      valueFormatter: ({value}) => value.pub.pub_name,
-    }, 
-    { 
-      field: "edition", 
-      headerName: "Edition", 
-      flex: 1,
-      valueFormatter: ({value}) => value.edition,
-  },
-    { 
-      field: "district", 
-      headerName: "District", 
-      flex: 1,
-      valueFormatter: ({value}) => value.district,
-  },
-      { 
-        field: "district", 
-        headerName: "State", 
-        flex: 1,
-        valueFormatter: ({value}) => value.state.state,
-      },
-  ];
+  // const columns =[
+  //   { 
+  //     field: "edition", 
+  //     headerName: "Publication", 
+  //     flex:1,
+  //     valueFormatter: ({value}) => value.pub.pub_name,
+  //   }, 
+  //   { 
+  //     field: "edition", 
+  //     headerName: "Edition", 
+  //     flex: 1,
+  //     valueFormatter: ({value}) => value.edition,
+  // },
+  //   { 
+  //     field: "district", 
+  //     headerName: "District", 
+  //     flex: 1,
+  //     valueFormatter: ({value}) => value.district,
+  // },
+  //     { 
+  //       field: "district", 
+  //       headerName: "State", 
+  //       flex: 1,
+  //       valueFormatter: ({value}) => value.state.state,
+  //     },
+  // ];
   const arrayUniqueByPubName = [...new Map(publication.map(item =>
     [item["pub_name"], item])).values()];
   const arrayUniqueByStateName = [...new Map(state.map(item =>
@@ -86,12 +87,12 @@ const Edition = ()=>{
     setDistrictCheck(st);
   }
 
-  React.useEffect(() => {
-    fetch("https://poorvikadashboard.herokuapp.com/api/v1/Edition_save_list")
-      .then((data) => data.json())
-      .then((data) => setTableData(data));
-      // console.log(tableData);
-  }, []);
+  // React.useEffect(() => {
+  //   fetch("https://poorvikadashboard.herokuapp.com/api/v1/Edition_save_list")
+  //     .then((data) => data.json())
+  //     .then((data) => setTableData(data));
+  //     // console.log(tableData);
+  // }, []);
 
 
   React.useEffect(()=>{
@@ -290,9 +291,10 @@ const Edition = ()=>{
                 </Button>
               </Box>
               <br />
-              <Box sx={{ height: 400, width: '100%' }}>
+              <EditionTable edition={editionValue} />
+              {/* <Box sx={{ height: 400, width: '100%' }}>
                 <DataGrid getRowId={(r)=>r.id} rows={tableData} columns={columns} />
-              </Box>
+              </Box> */}
 
         {/* </Container> */}
       </Page>

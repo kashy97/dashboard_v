@@ -22,7 +22,7 @@ import RUpdate from "./pages/Release Orders/release_orders_update";
 import Register from "./auth/register";
 import RequireAuth from "./routes/RequireAuth";
 import ForgotPassword from "./auth/forgotpassword";
-import Edition from "./pages/edition";
+import Edition from "./pages/Edition/edition";
 import Page404 from "./pages/404";
 // import NotFound from "./pages/Page404";
 

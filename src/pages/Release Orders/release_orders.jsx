@@ -48,7 +48,7 @@ const ROrders = (props) => {
 
   const deleteVendor = (id) => {
     if(window.confirm("Are you sure you want to delete")){
-    axios.delete(`https://poorvikadashboard.herokuapp.com/api/v1/ro_list/${id}`).then(()=>{
+    axios.delete(`https://poorvikadashboard.herokuapp.com/api/v1/ro/${id}`).then(()=>{
         enqueueSnackbar('Successfully deleted' , { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
         setTimeout(() => {
           window.location.reload();
@@ -97,13 +97,13 @@ const ROrders = (props) => {
                 <Typography>
                 Vendor Name: {r.vendor.name}
                 </Typography>
+                <Typography variant="h5" component="div">
+                  Pub Date
+                  </Typography>
                 {
                 pubData.map((p)=>
                   r.id===p.ro.id ?
                   <div>
-                  <Typography variant="h5" component="div">
-                  Pub Date
-                  </Typography>
                   <Typography color="text.secondary">
                   {p.pub_date}
                   </Typography>

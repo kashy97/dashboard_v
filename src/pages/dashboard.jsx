@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import React, { useEffect } from "react";
 import Page from "../components/Page";
-import AppWidgetSummary from "../section/@dashboard/AppWidgetSummary";
+import AppWidgetSummary from "../section/@dashboard/homepage/AppWidgetSummary";
 
 const DashBoard = (props) => {
   //insert data history here
