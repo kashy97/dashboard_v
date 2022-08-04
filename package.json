@@ -1,7 +1,7 @@
 {
   "name": "dashboard_v",
   "version": "0.1.0",
-  "homepage": "/dashboard/homepage",
+  "homepage": "https://nostalgic-banach-15fb75.netlify.app/dashboard/homepage",
   "private": false,
   "dependencies": {
     "@emotion/react": "^11.8.1",
