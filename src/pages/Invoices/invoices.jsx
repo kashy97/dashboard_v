@@ -88,7 +88,7 @@ const Orders = (props) => {
                   Quantity: {i.quantity}
                   </Typography>
                   <Typography color="text.secondary">
-                  GST: {i.gst}
+                  GST: {i.gst}%
                   </Typography>
                   <Typography color="text.secondary">
                   Net Amount: {i.net_amount}

@@ -8,6 +8,7 @@ import {
   TextField,
   Container,
   Typography,
+  InputAdornment,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
@@ -15,6 +16,7 @@ import Page from "../../components/Page";
 import Axios from "axios";
 import { SnackbarProvider,useSnackbar } from 'notistack';
 import { createBrowserHistory } from "history";
+import PercentIcon from "@mui/icons-material/Percent";
 
 const IAdd = () => {
 
@@ -234,6 +236,13 @@ useEffect(()=> {
                   label="GST"
                   type="number"
                   variant="outlined"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <PercentIcon />
+                      </InputAdornment>
+                    ),
+                  }}
                   onClick={()=>setSearch_index(index)}
                   value={items.gst===0?"":items.gst}
                   onChange={(e)=>handleItemChange(e,index)}

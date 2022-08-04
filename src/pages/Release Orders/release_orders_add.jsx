@@ -8,6 +8,7 @@ import {
   Typography,
   Container,
   Grid,
+  InputAdornment,
 } from "@mui/material";
 // import { styled } from "@mui/material/styles";
 import React from "react";
@@ -19,6 +20,7 @@ import DatePicker from "@mui/lab/DatePicker";
 import Page from "../../components/Page";
 import Axios from "axios";
 import { SnackbarProvider,useSnackbar } from 'notistack';
+import PercentIcon from "@mui/icons-material/Percent";
 
 // const CustomPickersDay = styled(PickersDay, {
 //   shouldForwardProp: (prop) => prop !== "selected"
@@ -472,6 +474,13 @@ const handleItemAdd = (e) => {
                   id="gst"
                   label="GST"
                   type="number"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <PercentIcon />
+                      </InputAdornment>
+                    ),
+                  }}
                   variant="outlined"
                   onClick={gstClick}
                   onChange={(e)=>setGst(Number(e.target.value))}

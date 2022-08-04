@@ -127,7 +127,7 @@ const ROrders = (props) => {
                 Gross Amount: {r.gross_amount}
                 </Typography>
                 <Typography>
-                GST: {r.gst}
+                GST: {r.gst}%
                 </Typography>
                 <Typography>
                 Net Amount: {r.net_amunt}
