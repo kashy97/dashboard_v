@@ -26,7 +26,7 @@ const Branches = (props) => {
           enqueueSnackbar('Successfully deleted' , { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
           setTimeout(() => {
             window.location.reload();
-          }, 2000); 
+          }, 1000); 
       })
   }}
 
@@ -38,7 +38,7 @@ const Branches = (props) => {
   
   return (
     <div className="branches">
-      <Page title="Branches">
+      <Page title="Poorvika | Branches">
         <div className="branches_head">
           <Typography variant="h4">Branches</Typography>
           <br />

@@ -11,6 +11,7 @@ import {
 import React, { useEffect } from "react";
 import Page from "../components/Page";
 import AppWidgetSummary from "../section/@dashboard/homepage/AppWidgetSummary";
+// import Axios from 'axios';
 
 const DashBoard = (props) => {
   //insert data history here
@@ -18,8 +19,9 @@ const DashBoard = (props) => {
   const [vendorData, setVendorData] = React.useState([]);
   const [releaseData, setReleaseData] = React.useState([]);
   const [branchData, setBranchData] = React.useState([]);
-  // const [purchaseAmount, setPurchaseAmount] = React.useState(0);
-  // const [releaseAmount, setReleaseAmount] = React.useState(0);
+  // const [countData, setCountData] = React.useState([]);
+  const [purchaseAmount, setPurchaseAmount] = React.useState(0);
+  const [releaseAmount, setReleaseAmount] = React.useState(0);
   // const [totalPurchase, setTotalPurchase] = React.useState(0);
   // const [totalRelease, setTotalRelease] =React.useState(0);
   const r_columns = [
@@ -72,36 +74,6 @@ const DashBoard = (props) => {
     // { field: "contact_reference", headerName: "Contact Reference", flex: 1 },
   ]
 
-  // useEffect(() => {
-  //   const rTotal = async()=> {
-  //       var arr = document.getElementsByName("r_amount");
-  //       setTotalRelease(arr.length)
-  //       var rtotal = 0;
-  //       for(var i = 0; i < arr.length; i++) {
-  //           if(arr[i].value) {
-  //               rtotal += +arr[i].value;
-  //           }
-  //           setReleaseAmount(rtotal)
-  //       }
-  //   }
-  //   rTotal()
-  // }, [releaseData])
-  
-  // useEffect(() => {
-  //   const pTotal = async()=> {
-  //       var arr = document.getElementsById("p_amount");
-  //       setTotalPurchase(arr.length)
-  //       var ptotal = 0;
-  //       for(var i = 0; i < arr.length; i++) {
-  //           if(arr[i].value) {
-  //               ptotal += +arr[i].value;
-  //           }
-  //           setPurchaseAmount(ptotal)
-  //       }
-  //   }
-  //   pTotal()
-  // }, [tableData])
-  
   useEffect(() => {
     fetch("https://poorvikadashboard.herokuapp.com/api/v1/po_list")
       .then((data) => data.json())
@@ -109,6 +81,21 @@ const DashBoard = (props) => {
       // console.log(tableData);
   }, [props.value]);
 
+  useEffect(() => {
+    let po_sum=0;
+    for( let i=0; i<tableData.length; i++ ) {
+      po_sum+=Number(tableData[i].net_amount);
+    }
+    setPurchaseAmount(po_sum);
+  }, [tableData]);
+
+  useEffect(() => {
+    let ro_sum=0;
+    for( let j=0; j<releaseData.length; j++ ) {
+      ro_sum+=Number(releaseData[j].net_amunt);
+    }
+    setReleaseAmount(ro_sum);
+  }, [releaseData]);
   useEffect(() => {
     fetch("https://poorvikadashboard.herokuapp.com/api/v1/vendor")
       .then((data) => data.json())
@@ -129,7 +116,7 @@ const DashBoard = (props) => {
       .then((data) => setBranchData(data));
       console.log("fetched");
   }, [props.value]);
-
+// console.log(releaseData[1].net_amunt)
   return (
     <Page title="Poorvika | Dashboard">
       <Container maxWidth="xl">
@@ -140,19 +127,19 @@ const DashBoard = (props) => {
         </Box>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="PO Gross" total={752752} icon={'ant-design:dollar-circle-filled'} />
+            <AppWidgetSummary title="PO Gross" total={purchaseAmount} icon={'ant-design:dollar-circle-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Total PO" total={7272782} color="info" icon={'ant-design:file-filled'} />
+            <AppWidgetSummary title="Total PO" total={tableData.length} color="info" icon={'ant-design:file-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="RO Gross" total={7527237} color="warning" icon={'ant-design:dollar-circle-filled'} />
+            <AppWidgetSummary title="RO Gross" total={releaseAmount} color="warning" icon={'ant-design:dollar-circle-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Total RO" total={577878788} color="error" icon={'ant-design:file-filled'} />
+            <AppWidgetSummary title="Total RO" total={releaseData.length} color="error" icon={'ant-design:file-filled'} />
           </Grid>
         </Grid>
         <br />

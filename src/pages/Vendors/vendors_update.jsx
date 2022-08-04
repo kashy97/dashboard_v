@@ -49,7 +49,7 @@ const VUpdate=(props) =>{
             enqueueSnackbar('Succesfully Updated', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } ); 
             setTimeout(() => {
               window.location.reload();
-            }, 2000); 
+            }, 1000); 
           }
         }, (error) => {
           enqueueSnackbar('Check Data and Try Again', { variant:'Error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
@@ -62,7 +62,7 @@ const VUpdate=(props) =>{
       setVendorData(newdata)
   }
     return(
-        <Page title="Vendors | Update">
+        <Page title="Poorvika | Vendors | Update">
             <Container maxWidth="xl">
                 <Box
                     component="form"

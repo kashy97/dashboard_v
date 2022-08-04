@@ -90,7 +90,7 @@ const IAdd = () => {
         history.push("/dashboard/po")
         setTimeout(() => {
           window.location.reload();
-        }, 2000);     
+        }, 1000);     
       }, (error) => {
         enqueueSnackbar('Check the data and try again', { variant:'Error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
         console.log(error);
@@ -158,7 +158,7 @@ useEffect(()=> {
 },[itemList, search_index])
 
   return (
-    <Page title="Purchase Order | Add">
+    <Page title="Poorvika | Purchase Order | Add">
       <Container maxWidth="xl">
         <Box
           component="form"

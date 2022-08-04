@@ -160,7 +160,7 @@ const Edition = ()=>{
       console.log(response);
       setTimeout(() => {
         window.location.reload();
-      }, 2000); 
+      }, 1000); 
     },(error) => {
       enqueueSnackbar('Check Data and Try Again', { variant:'Error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
       console.log(error);
@@ -170,7 +170,7 @@ const Edition = ()=>{
 
   return (
     <div className="edition">
-      <Page title="Edition | Mapping">
+      <Page title="Poorvika | Edition | Mapping">
         <div className="edition_head">
           <Typography variant="h4">Edition Mapping</Typography>
         </div>

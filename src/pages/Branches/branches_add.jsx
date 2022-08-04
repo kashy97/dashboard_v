@@ -47,14 +47,14 @@ const BAdd = () => {
         history.push("/dashboard/branches")
         setTimeout(() => {
           window.location.reload();
-        }, 2000); 
+        }, 1000); 
       }, (error) => {
         console.log(error);
         enqueueSnackbar('Check values and Try Again', { variant:'Error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
     });
   }
   return (
-    <Page title="Branches | Add">
+    <Page title="Poorvika | Branches | Add">
       <Container maxWidth="xl">
       <Box
           component="form"

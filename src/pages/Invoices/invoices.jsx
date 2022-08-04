@@ -34,7 +34,7 @@ const Orders = (props) => {
         enqueueSnackbar('Successfully deleted' , { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
         setTimeout(() => {
           window.location.reload();
-        }, 2000); 
+        }, 1000); 
       }).catch (err => console.log(err))
   }}
 
@@ -46,7 +46,7 @@ const Orders = (props) => {
 
   console.log("Check", items);
   return (
-    <Page title="Purchase Order">
+    <Page title="Poorvika | Purchase Order">
       <div className="navigation_purchase">
         <Typography variant="h4">Purchase Orders</Typography>
         <Button variant="contained" color="primary" href="po/add">

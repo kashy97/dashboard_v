@@ -52,7 +52,7 @@ const ROrders = (props) => {
         enqueueSnackbar('Successfully deleted' , { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
         setTimeout(() => {
           window.location.reload();
-        }, 2000); 
+        }, 1000); 
       }).catch (err => console.log(err))
   }}
 
@@ -63,7 +63,7 @@ const ROrders = (props) => {
   }
 
   return (
-    <Page title="Invoices">
+    <Page title="Poorvika | Release Order">
       <div className="navigation_purchase">
         <Typography variant="h4">Release Orders</Typography>
         <Button variant="contained" color="primary" href="release_orders/add">

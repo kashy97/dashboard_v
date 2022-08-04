@@ -124,12 +124,22 @@ const RAdd = () => {
       ))
     },[vendorValue, vendors])
 
-  React.useEffect(()=>{
-    edition.map((e) => (
-      editionValue===e.edition?
-      setIdofedition(e.id):null
-    ))
-  },[edition,editionValue])
+    React.useEffect(()=>{
+      edition.map((e)=>(
+        editionValue===e.edition?
+        setIdofedition(e.id):null
+      ))
+    },[editionValue, edition])
+
+  // React.useEffect(()=>{
+  //   const eid=[...idofedition]
+  //   for(let i=0;i<editionValue.length;i++) {  
+  //   for(let j=0;j<edition.length;j++){
+  //     if(editionValue[i].eValue===edition[j].edition){
+  //       eid[i].edition=edition[j].id 
+  //       setIdofedition(eid)}
+  //     }}
+  //   },[edition, editionValue, idofedition])
     React.useEffect(()=>{
       branches.map((b)=>(
         branchValue===b.name?
@@ -151,9 +161,9 @@ const RAdd = () => {
         gst_amount: gsta,
         net_amunt: net,
         billing_address: idofbranch,
-        edition: [{
-          edition: idofedition,
-        }],
+        edition: [
+          {edition:idofedition}
+        ],
         pub_date: pub_value.date,
     }).then((response) => {
       enqueueSnackbar('Data Entry Successful', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
@@ -208,6 +218,22 @@ const handleItemAdd = (e) => {
   }]}));
 };
 
+// const handleEditionChange=(e,index)=>{
+//   const elist = [...editionValue];
+//   elist[index].eValue=e.target.value;
+//   setEditionValue(elist);
+// };
+
+// const handleEditionRemove= (index) => {
+//   const elist=[...editionValue];
+//   elist.splice(index,1);
+//   setEditionValue(elist);
+// };
+
+// const handleEditionAdd = () => {
+//   setEditionValue([...editionValue, {eValue:''}]);
+// };
+
   React.useEffect(() => {
     const percent = gst / 100;
     setGsta(Math.round(gross * percent));
@@ -225,7 +251,7 @@ const handleItemAdd = (e) => {
   }
 
   return (
-    <Page title="Release Order">
+    <Page title="Poorvika | Release Order">
       <Container maxWidth="xl">
         <Box component="form" pb="3" pr="3" noValidate autoComplete="off">
           <Stack spacing={5}>
@@ -298,6 +324,7 @@ const handleItemAdd = (e) => {
                     onChange={(e)=>handlePublication(e.target.value)}
                     variant="outlined"
                   >
+                    <MenuItem disabled>Select Publication</MenuItem>
                     {arrayUniqueByPubName &&
                     arrayUniqueByPubName !== undefined?
                     arrayUniqueByPubName.map((option,index) => (
@@ -309,27 +336,61 @@ const handleItemAdd = (e) => {
                     }
                   </TextField>
               </Grid>
-              <Grid item xs={12} md={6} xl={6}>
-              <TextField
-                  fullWidth
-                  id="edition"
-                  label="Edition"
-                  select
-                  value={editionValue}
-                  onChange={(e)=>setEditionValue(e.target.value)}
-                  variant="outlined"
-                >
-                  {editionCheck &&
-                  editionCheck !== undefined?
-                  editionCheck.map((option,index) => (
-                    <MenuItem key={index} value={option.edition}>
-                      {option.edition}
-                    </MenuItem>
-                  ))
-                :"No Edition"
-                }
-                </TextField>
-                </Grid>
+              {/* {editionValue.map((ed,index) => (
+                <div key={index} className="pub-list">
+                  <Grid container spacing={4}> */}
+                    <Grid item xs={12} md={6} xl={6}>
+                      <TextField
+                        fullWidth
+                        id="edition"
+                        name="edition"
+                        label="Edition" 
+                        select
+                        value={editionValue}
+                        onChange={(e)=>setEditionValue(e.target.value)}
+                        // value={ed.eValue}
+                        // onChange={(e) => handleEditionChange(e,index)}
+                        variant="outlined"
+                      >
+                      <MenuItem disabled>Select Edition</MenuItem>
+                        {editionCheck &&
+                        editionCheck !== undefined?
+                        editionCheck.map((option,index) => (
+                          <MenuItem key={index} value={option.edition}>
+                            {option.edition}
+                          </MenuItem>
+                        ))
+                        :"No Edition"
+                        }
+                      </TextField>
+                    </Grid>
+                    {/* {editionValue.length!==1 && (
+                    <Grid item xs={12} md={6} xl={6} sx={{alignSelf:'center'}}>
+                      <Button
+                      sx={{ maxWidth: 8}} 
+                      size="medium" 
+                      variant="outlined"
+                      onClick={()=>handleEditionRemove(index)}
+                      >
+                        -
+                      </Button>
+                    </Grid>
+                    )}
+                  </Grid>
+                  {editionValue.length - 1 === index && (
+                    <div className="plus-btn">
+                      <Button 
+                      sx={{ maxWidth: 8}} 
+                      size="medium"   
+                      variant="outlined"
+                      onClick={handleEditionAdd}
+                      >
+                      +
+                      </Button>
+                    </div>
+                  )}
+                  </div>
+                ))} */}
           {pub_value.date.map((date,index) => (
             <div key={index} className="pub-list">
               <Grid container spacing={4}>

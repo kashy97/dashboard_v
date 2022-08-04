@@ -49,14 +49,14 @@ const VAdd = () => {
         history.push("/dashboard/vendors")
         setTimeout(() => {
           window.location.reload();
-        }, 2000); 
+        }, 1000); 
       }, (error) => {
         console.log(error);
         enqueueSnackbar('Check values and Try Again', { variant:'Error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
     });
   }
   return (
-    <Page title="Vendors | Add">
+    <Page title="Poorvika | Vendors | Add">
       <Container maxWidth="xl">
       <Box
           component="form"

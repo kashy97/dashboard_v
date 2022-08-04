@@ -81,7 +81,7 @@ const LoginForm= ()=> {
             history.push("/dashboard/homepage")
             setTimeout(() => {
               window.location.reload();
-            },2000);
+            },1000);
             // navigate("/dashboard/homepage", { replace: true });    
 
           }

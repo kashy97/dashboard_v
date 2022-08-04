@@ -26,7 +26,7 @@ const Vendors = (props) => {
           enqueueSnackbar('Successfully deleted' , { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
           setTimeout(() => {
             window.location.reload(false)
-          },2000);
+          },1000);
       })
   }}
 
@@ -38,7 +38,7 @@ const Vendors = (props) => {
   
   return (
     <div className="vendors">
-      <Page title="Vendors">
+      <Page title="Poorvika | Vendors">
         <div className="vendors_head">
           <Typography variant="h4">Vendors</Typography>
           <br />
