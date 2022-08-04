@@ -21,6 +21,7 @@ import Page from "../../components/Page";
 import Axios from "axios";
 import { SnackbarProvider,useSnackbar } from 'notistack';
 import PercentIcon from "@mui/icons-material/Percent";
+import { createBrowserHistory } from "history";
 
 // const CustomPickersDay = styled(PickersDay, {
 //   shouldForwardProp: (prop) => prop !== "selected"
@@ -42,6 +43,7 @@ const RAdd = () => {
 
   const {enqueueSnackbar} = useSnackbar();
   const [ro_value, setRovalue] = React.useState([startOfDay(new Date())]);
+  const history= createBrowserHistory();
   const [pub_value, setPubvalue] = React.useState({ date:[
     {
       pub_date:null,
@@ -170,6 +172,10 @@ const RAdd = () => {
     }).then((response) => {
       enqueueSnackbar('Data Entry Successful', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
       console.log(response);
+      history.push("/dashboard/release_orders")
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);  
     },(error) => {
       enqueueSnackbar('Check Data and Try Again', { variant:'Error', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
       console.log(error);
