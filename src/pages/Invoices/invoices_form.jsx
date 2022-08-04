@@ -86,7 +86,7 @@ const IAdd = () => {
       gst_amount: gstAmount,
       net_amount: net,
       items: itemList.items,
-      branches: idofbranch,
+      branches: idofbranch+1,
   }).then((response) => {
         console.log(response);
         enqueueSnackbar('Added Purchase Order', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
@@ -313,7 +313,7 @@ useEffect(()=> {
               variant="outlined"
             >
               {branches.map((option) => (
-                <MenuItem key={option.id} value={option.name}>
+                <MenuItem key={option.id} value={option.id}>
                   {option.name},{option.state}
                 </MenuItem>
               ))}

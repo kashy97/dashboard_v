@@ -162,7 +162,7 @@ const RAdd = () => {
         gst: gst,
         gst_amount: gsta,
         net_amunt: net,
-        billing_address: idofbranch,
+        billing_address: idofbranch+1,
         edition: [
           {edition:idofedition}
         ],
@@ -520,7 +520,7 @@ const handleItemAdd = (e) => {
                   variant="outlined"
                 >
                   {branches.map((option) => (
-                    <MenuItem key={option.id} value={option.name}>
+                    <MenuItem key={option.id} value={option.id}>
                       {option.name},{option.state}
                     </MenuItem>
                   ))}
