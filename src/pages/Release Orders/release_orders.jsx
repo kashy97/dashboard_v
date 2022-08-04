@@ -133,7 +133,7 @@ const ROrders = (props) => {
                 Net Amount: {r.net_amunt}
                 </Typography>
                 <Typography>
-                Billing Address: {r.billing_address.name}
+                Billing Address: {r.billing_address.name},{r.billing_address.state}
                 </Typography>
               </CardContent>
               <CardActions sx={{ justifyContent:'center'}}>

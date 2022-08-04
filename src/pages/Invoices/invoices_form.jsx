@@ -304,7 +304,7 @@ useEffect(()=> {
             >
               {branches.map((option) => (
                 <MenuItem key={option.id} value={option.name}>
-                  {option.name}
+                  {option.name},{option.state}
                 </MenuItem>
               ))}
             </TextField>

@@ -106,7 +106,7 @@ const Orders = (props) => {
                 Gross Amount: {p.net_amount}
                 </Typography>
                 <Typography>
-                Branch: {p.branches.name}
+                Branch: {p.branches.name},{p.branches.state}
                 </Typography>
               </CardContent>
               <CardActions sx={{ justifyContent:'center'}}>

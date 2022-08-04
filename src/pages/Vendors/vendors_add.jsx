@@ -170,7 +170,7 @@ const VAdd = () => {
                 <TextField
                   fullWidth
                   id="zipcode"
-                  label="Zip Code"
+                  label="Pin Code"
                   type="text"
                   value={vendorData.zipcode}
                   onChange={(e) => handleChange(e)}
