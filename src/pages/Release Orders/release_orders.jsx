@@ -24,24 +24,24 @@ const ROrders = (props) => {
   // },[poData]);
 
   React.useEffect(() => {
-    console.log("fetched");
+    // console.log("fetched");
     axios.get("https://poorvikadashboard.herokuapp.com/api/v1/ro_list").then((res) => {
-      console.log(res.data)
+      // console.log(res.data)
       setRoData(res.data)
     });
   }, []);
   React.useEffect(() => {
-    console.log("fetched");
+    // console.log("fetched");
     axios.get("https://poorvikadashboard.herokuapp.com/api/v1/ro_Pub_date_list").then((res) => {
-      console.log(res.data)
+      // console.log(res.data)
       setPubData(res.data)
     });
   }, []);
 
   React.useEffect(() => {
-    console.log("fetched");
+    // console.log("fetched");
     axios.get("https://poorvikadashboard.herokuapp.com/api/v1/ro_edition_list").then((res) => {
-      console.log(res.data)
+      // console.log(res.data)
       setEditionData(res.data)
     });
   }, []);

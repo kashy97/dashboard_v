@@ -31,7 +31,7 @@ const VUpdate=(props) =>{
       // const id=props.match.params.id
       Axios.get(url+id)
         .then((res) => {
-          console.log(res.data)
+          // console.log(res.data)
           setBranchData(res.data)
       }).catch(err=>console.error(err))
   }, [id]);
@@ -41,7 +41,7 @@ const VUpdate=(props) =>{
       // const id= props.match.params.id
       Axios.put(url+id,branchData)
          .then((response) => {
-          console.log(response);
+          // console.log(response);
           if(response.status === 200) {
             history.push("/dashboard/branches")
             enqueueSnackbar('Succesfully Updated', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } ); 

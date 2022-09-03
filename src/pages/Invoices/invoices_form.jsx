@@ -32,7 +32,7 @@ const IAdd = () => {
     net_amount:0,
     }
   ]
-  });
+ });
   const [senderRef, setSenderRef] = useState('');
   const [net,setNet] =useState(0);
   const [gstAmount, setGstAmount] = useState(0);
@@ -61,7 +61,7 @@ const IAdd = () => {
   useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/vendor',{
     }).then((response) => {
-          console.log("vendor",response.data);
+          // console.log("vendor",response.data);
           const vendors=response.data;
           setVendors(vendors);
         }, (error) => {
@@ -71,7 +71,7 @@ const IAdd = () => {
   useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/branches',{
     }).then((response) => {
-          console.log("branches",response.data);
+          // console.log("branches",response.data);
           const branches=response.data;
           setBranches(branches);
         }, (error) => {
@@ -88,7 +88,7 @@ const IAdd = () => {
       items: itemList.items,
       branches: idofbranch+1,
   }).then((response) => {
-        console.log(response);
+        // console.log(response);
         enqueueSnackbar('Added Purchase Order', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
         history.push("/dashboard/po")
         setTimeout(() => {
@@ -100,37 +100,26 @@ const IAdd = () => {
     });
   }
 
-  useEffect(() => {
-    const newTotal = async()=> {
-        var arr = document.getElementsByName("gross");
-        var newtotal = 0;
-        for(var i = 0; i < arr.length; i++) {
-            if(arr[i].value) {
-                newtotal += +arr[i].value;
-            }
-            setNet(newtotal)
-        }
+const calctotal = (newList) => {
+    var newgst=0;
+    var newtotal=0;
+    for(var i = 0; i < newList.length; i++)
+    { 
+      newgst += +newList[i].gst_amount 
+      newtotal += +newList[i].net_amount
     }
-    newTotal()
-}, [itemList])
-  useEffect(() => {
-    const newGST = async()=> {
-      var arr1 = document.getElementsByName("gstamount");
-      var newgst = 0;
-      for(var i = 0; i < arr1.length; i++) {
-          if(arr1[i].value) {
-              newgst += +arr1[i].value;
-              setGstAmount(newgst)
-          }
-      }
-  }
-  newGST()
-  }, [itemList])
+    setGstAmount(newgst)
+    setNet(newtotal)  
+}
 
 const handleItemRemove= (index) => {
     const list=itemList.items;
     list.splice(index,1);
-    setItemList((prevState)=>({...prevState,list}));
+    setSearch_index(search_index-1)
+    // console.log("remove",list)
+    calctotal(list)
+    setItemList((prevState)=>({...prevState,list}))
+    
 };
 
 const handleItemAdd = (e) => {
@@ -152,14 +141,22 @@ const handleItemChange=(e,index)=>{
   setItemList({...itemList, items:list});
 };
 
-useEffect(()=> {
+useEffect(() => {
+  gstCalculation()
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, [itemList, search_index])
+
+const gstCalculation = () =>{
+  // console.log("INDEX", search_index)
   const list = [...itemList.items];
   const percent = list[search_index].gst / 100;
   const total = list[search_index].quantity * list[search_index].unit_price;
   list[search_index].gst_amount=Math.round(total * percent)
   list[search_index].net_amount=list[search_index].gst_amount + total;
-},[itemList, search_index])
+  calctotal(list)
+}
 
+// console.log("CHECK", itemList)
   return (
     <Page title="Poorvika | Purchase Order | Add">
       <Container maxWidth="xl">

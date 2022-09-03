@@ -14,15 +14,15 @@ const Orders = (props) => {
 
   React.useEffect(()=>{
     axios.get("https://poorvikadashboard.herokuapp.com/api/v1/items_list").then((res)=>{
-      console.log(res.data)
+      // console.log(res.data)
       setItems(res.data)
     });
   }, []);
 
   React.useEffect(() => {
-    console.log("fetched");
+    // console.log("fetched");
     axios.get("https://poorvikadashboard.herokuapp.com/api/v1/po_list").then((res) => {
-      console.log(res.data)
+      // console.log(res.data)
       setPoData(res.data)
     });
   }, []);
@@ -44,7 +44,7 @@ const Orders = (props) => {
     window.location.reload();
   }
 
-  console.log("Check", items);
+  // console.log("Check", items);
   return (
     <Page title="Poorvika | Purchase Order">
       <div className="navigation_purchase">

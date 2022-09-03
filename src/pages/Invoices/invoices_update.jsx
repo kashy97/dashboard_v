@@ -62,7 +62,7 @@ const IAdd = () => {
   useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/vendor',{
     }).then((response) => {
-          console.log("vendor",response.data);
+          // console.log("vendor",response.data);
           const vendors=response.data;
           setVendors(vendors);
         }, (error) => {
@@ -72,7 +72,7 @@ const IAdd = () => {
   useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/branches',{
     }).then((response) => {
-          console.log("branches",response.data);
+          // console.log("branches",response.data);
           const branches=response.data;
           setBranches(branches);
         }, (error) => {
@@ -89,7 +89,7 @@ const IAdd = () => {
       items: itemList.items,
       branches: idofbranch,
   }).then((response) => {
-        console.log(response);
+        // console.log(response);
         enqueueSnackbar('Update Purchase Order', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
         history.push("/dashboard/po")
         setTimeout(() => {

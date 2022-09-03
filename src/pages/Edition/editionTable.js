@@ -90,7 +90,7 @@ const EditionTable = (props) => {
   useEffect(()=>{
     Axios.get('https://poorvikadashboard.herokuapp.com/api/v1/Edition_save_list',{
     }).then((response) => {
-      console.log("edition",response.data);
+      // console.log("edition",response.data);
       const editions=response.data; 
       setEdition(editions);
     }, (error) => {
@@ -147,7 +147,7 @@ const EditionTable = (props) => {
 
   const isUserNotFound = filteredUsers.length === 0;
 
-  console.log("test", edition)
+  // console.log("test", edition)
   return (
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>

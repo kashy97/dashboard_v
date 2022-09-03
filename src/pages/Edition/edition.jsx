@@ -157,7 +157,7 @@ const Edition = ()=>{
       district: idofdistrict,
     }).then((response) => {
       enqueueSnackbar('Data Entry Successful', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
-      console.log(response);
+      // console.log(response);
       setTimeout(() => {
         window.location.reload();
       }, 1000); 

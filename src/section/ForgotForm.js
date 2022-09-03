@@ -25,7 +25,7 @@ export default function ForgotForm() {
     },
     validationSchema: LoginSchema,
     onSubmit: () => {
-      console.log("email verification sent")
+      // console.log("email verification sent")
       navigate('/login')
     },
   });

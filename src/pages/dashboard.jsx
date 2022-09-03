@@ -100,21 +100,21 @@ const DashBoard = (props) => {
     fetch("https://poorvikadashboard.herokuapp.com/api/v1/vendor")
       .then((data) => data.json())
       .then((data) => setVendorData(data));
-      console.log("v","fetched");
+      // console.log("v","fetched");
   }, [props.value]);
 
   useEffect(() => {
     fetch("https://poorvikadashboard.herokuapp.com/api/v1/ro_list")
       .then((data) => data.json())
       .then((data) => setReleaseData(data));
-      console.log("fetched");
+      // console.log("fetched");
   }, [props.value]);
 
   useEffect(()=>{
     fetch("https://poorvikadashboard.herokuapp.com/api/v1/branches")
       .then((data) => data.json())
       .then((data) => setBranchData(data));
-      console.log("fetched");
+      // console.log("fetched");
   }, [props.value]);
 // console.log(releaseData[1].net_amunt)
   return (

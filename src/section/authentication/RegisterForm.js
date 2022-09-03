@@ -49,8 +49,8 @@ const RegisterForm= () => {
 
   const handleCheck = (data) => {
 
-    console.log(data)
-    console.log(JSON.stringify(data,null,2))
+    // console.log(data)
+    // console.log(JSON.stringify(data,null,2))
      axios.post("https://poorvikadashboard.herokuapp.com/api/v1/register/", {
         email: data.email,
         name: data.name,

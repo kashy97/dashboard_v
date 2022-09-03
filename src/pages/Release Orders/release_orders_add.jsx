@@ -171,7 +171,7 @@ const RAdd = () => {
         pub_date: pub_value.date,
     }).then((response) => {
       enqueueSnackbar('Data Entry Successful', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
-      console.log(response);
+      // console.log(response);
       history.push("/dashboard/release_orders")
         setTimeout(() => {
           window.location.reload();

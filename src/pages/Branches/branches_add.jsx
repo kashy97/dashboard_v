@@ -42,7 +42,7 @@ const BAdd = () => {
     e.preventDefault();
     Axios.post(url,branchData) 
     .then((response) => {
-        console.log(response); 
+        // console.log(response); 
         enqueueSnackbar('Succesfully Updated', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
         history.push("/dashboard/branches")
         setTimeout(() => {

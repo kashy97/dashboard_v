@@ -44,7 +44,7 @@ const VAdd = () => {
     e.preventDefault();
     Axios.post(url,vendorData) 
     .then((response) => {
-        console.log(response); 
+        // console.log(response); 
         enqueueSnackbar('Succesfully Updated', { variant:'success', anchorOrigin:{horizontal: 'right', vertical: 'top'} } );
         history.push("/dashboard/vendors")
         setTimeout(() => {
